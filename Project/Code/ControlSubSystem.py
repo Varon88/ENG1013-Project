@@ -1,3 +1,10 @@
+# Function that holds the polling loop and all intermediary functionality
+# ENG-1013 - Project - A21
+# Created By : Varon Nethan Rasiah 
+# Created Date: 22/03/2024
+# version ='1.0'
+
+
 import time as time
 import InputSubSystem as input 
 import OutputSubSystem as output
@@ -155,7 +162,7 @@ def get_current_time():
 
 
 
-
+# Test light sequence function that doesnt require 30 seconds of printing similar to the main function
 def light_sequence_test(startStage):
     print("one print here is considered to be equivalent to 1 second")
     if startStage == 1:

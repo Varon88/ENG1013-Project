@@ -1,3 +1,9 @@
+# Entry point into the system include functions such as mode selection and the editing of system variables
+# ENG-1013 - Project - A21
+# Created By : Varon Nethan Rasiah 
+# Created Date: 22/03/2024
+# version ='1.0'
+
 
 import ControlSubSystem as control
 

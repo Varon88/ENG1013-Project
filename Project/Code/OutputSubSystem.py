@@ -1,3 +1,9 @@
+# Function that handles all the outputs necessary system wide. Mainly handles the sequential lightings
+# ENG-1013 - Project - A21
+# Created By : Varon Nethan Rasiah 
+# Created Date: 22/03/2024
+# version ='1.0'
+
 def OutputSubSystem(startStage):
 
     if startStage == 1:

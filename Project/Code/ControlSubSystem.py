@@ -8,6 +8,7 @@
 import time as time
 import InputSubSystem as input 
 import OutputSubSystem as output
+import ServicesSubSystem as service
 
 # light_sequence() parameters; 1 - start from start stage 1 and go on until stage 3; 4 - start from start stage 4 to stage 6
 
@@ -35,6 +36,8 @@ def ControlSubSystem(mode):
                     # light_sequence(1)
                     light_sequence_test(1)
                 
+                time.sleep(service.pollingFrequency)
+
                 print(f"polling loop cycle time : {get_current_time() - pollingLoopStartTime}")
 
         except KeyboardInterrupt:
@@ -166,30 +169,19 @@ def get_current_time():
 def light_sequence_test(startStage):
     print("one print here is considered to be equivalent to 1 second")
     if startStage == 1:
-        for i in range(2):
-            output.OutputSubSystem(0)
-        for i in range(30):
-            output.OutputSubSystem(startStage)
-        for i in range(3):
-            output.OutputSubSystem(startStage+1)
-        for i in range(3):
-            output.OutputSubSystem(startStage+2)
+        output.OutputSubSystem(0)
+        output.OutputSubSystem(startStage)
+        output.OutputSubSystem(startStage+1)
+        output.OutputSubSystem(startStage+2)
     if startStage == 4:
-        for i in range(2):
-            output.OutputSubSystem(3.5)
-        for i in range(30):
-            output.OutputSubSystem(startStage)
-        for i in range(3):
-            output.OutputSubSystem(startStage+1)
-        for i in range(3):
-            output.OutputSubSystem(startStage+2)
+        output.OutputSubSystem(3.5)
+        output.OutputSubSystem(startStage)
+        output.OutputSubSystem(startStage+1)
+        output.OutputSubSystem(startStage+2)
     if startStage == 0:
-        for i in range(30):
-            output.OutputSubSystem(startStage+1)
-        for i in range(3):
-            output.OutputSubSystem(startStage+2)
-        for i in range(3):
-            output.OutputSubSystem(startStage+3)
+        output.OutputSubSystem(startStage+1)
+        output.OutputSubSystem(startStage+2)
+        output.OutputSubSystem(startStage+3)
 
 
            

@@ -41,6 +41,7 @@ def ControlSubSystem(mode):
                 print(f"polling loop cycle time : {get_current_time() - pollingLoopStartTime}")
 
         except KeyboardInterrupt:
+            print("")
             print("Polling loop terminated")
 
     elif mode == 2:

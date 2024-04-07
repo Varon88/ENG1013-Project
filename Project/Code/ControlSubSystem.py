@@ -176,21 +176,53 @@ def get_current_time():
 
 # Test light sequence function that doesnt require 30 seconds of printing similar to the main function
 def light_sequence_test(startStage):
-    print("one print here is considered to be equivalent to 1 second")
+
     if startStage == 1:
         output.OutputSubSystem(0)
+        print("runs for 3 seconds")
+        print("")
+
         output.OutputSubSystem(startStage)
+        print("runs for 30 seconds")
+        print("")
+
         output.OutputSubSystem(startStage+1)
+        print("runs for 3 seconds")
+        print("")
+
         output.OutputSubSystem(startStage+2)
+        print("runs for 3 seconds")
+        print("")
+
     if startStage == 4:
         output.OutputSubSystem(3.5)
+        print("runs for 3 seconds")
+        print("")
+
         output.OutputSubSystem(startStage)
+        print("runs for 30 seconds")
+        print("")
+
         output.OutputSubSystem(startStage+1)
+        print("runs for 3 seconds")
+        print("")
+
         output.OutputSubSystem(startStage+2)
+        print("runs for 3 seconds")
+        print("")
+
+
     if startStage == 0:
         output.OutputSubSystem(startStage+1)
-        output.OutputSubSystem(startStage+2)
-        output.OutputSubSystem(startStage+3)
+        print("runs for 30 seconds")
+        print("")
 
+        output.OutputSubSystem(startStage+2)
+        print("runs for 3 seconds")
+        print("")
+
+        output.OutputSubSystem(startStage+3)
+        print("runs for 3 seconds")
+        print("")
 
            

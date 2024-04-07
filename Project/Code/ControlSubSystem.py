@@ -46,9 +46,17 @@ def ControlSubSystem(mode):
     elif mode == 2:
 
         try:
-            print("Normal mode")
+            print("Data Observation mode")
+            while True:
+                print(f"Sensor 1 input : {input.InputSubSystem(1)}")
+                print(f"Button input : {input.InputSubSystem(2)}")
+                
+                time.sleep(service.pollingFrequency)
+        
         except KeyboardInterrupt:
-            print("Data observation")
+            print("")
+            print("Data Observation mode terminated.")
+
 
 
 

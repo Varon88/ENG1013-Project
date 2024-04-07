@@ -20,7 +20,8 @@ def ServiesSubSystem():
     while True:
         while True:
             try:
-                mode = int(input("Enter the selected mode, 1: Normal, 2: Data and 3: maintenence and adjustments 4: terminate program--> "))
+                print_welcome_screen()
+                mode = int(input("Enter the selected mode --> "))
                 if mode > 4 and mode < 0:
                     print("Enter a valid number within the range 1 to 4.")
                     pass
@@ -52,10 +53,11 @@ def ServiesSubSystem():
                     print(f"Incorrect pin entered please try again; Tries remaining = {3-passwordTries}")
 
             if pinCondition == True:
-                print("access to system variables granted.")
+                print("Access to system variables granted.")
                 while True:
                     try:
-                        systemVarChangeSelection = int(str(input("Enter which system variable needes to be changed; 1 : pin, 2 : polling frequency -->")))
+                        print_system_variable_edit_menu()
+                        systemVarChangeSelection = int(str(input("Enter which system variable that needes to be changed -->")))
                         break
                     except ValueError:
                         print("please enter a selection of either 1 for pin or 2 for the polling frequency -->")
@@ -75,7 +77,8 @@ def ServiesSubSystem():
                         except ValueError:
                             print("please enter a set of digits and not letters or any other symbols")
                     pollingFrequency = newPollingFreq
-
+                elif systemVarChangeSelection == 3:
+                    pass
             else:
                 print("Incorrect pin! exiting program.")
                 break
@@ -100,11 +103,46 @@ def authenticate(userEnteredPassCode):
     
 
 def passwordPersistence(pin):
-    # try:
-    f = open(passwordFile,"w")
-    f.write(str(pin))
-    f.close()
-    # except:
-    print("some error has occured during the file write operation in trying to persist the user pass code.")
+    try:
+        f = open(passwordFile,"w")
+        f.write(str(pin))
+        f.close()
+    except:
+        print("some error has occured during the file write operation in trying to persist the user pass code.")
 
 
+def print_welcome_screen():
+    print()
+    print("================================================================================")
+    print("============================= Main Menu ========================================")
+    print("================================================================================")
+    print()
+    print("Modes Available --> ")
+    print()
+    print("       1 : for Normal Operation Mode")
+    print("       2 : for Data Observation Mode")
+    print("       3 : Maintenence and Adjustment Mode")
+    print("       4 : Terminate program")
+    print()
+    print("================================================================================")
+    print("================================================================================")
+
+
+
+def print_system_variable_edit_menu():
+    print()
+    print("================================================================================")
+    print("============================= System Variables =================================")
+    print("================================================================================")   
+    print()
+    print("Current System Variable Values --> ")
+    print()
+    print(f"       User-Pin : {userPin}")
+    print(f"       Polling rate : {pollingFrequency}") 
+    print()
+    print("       Enter 1 : To change the user pin")
+    print("       Enter 2 : To change Polling Rate")
+    print("       Enter 3 : To naviagte to the main menu")
+    print()
+    print("================================================================================")
+    print("================================================================================")

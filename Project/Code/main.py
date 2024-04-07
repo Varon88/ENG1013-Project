@@ -6,4 +6,20 @@
 
 import ServicesSubSystem as service
 
+
+# Password retrival
+try:
+    passwordFile = "/Users/varonrasiah/Documents/Moansh/ENG1013/Project/Code/password.txt"
+    f = open(passwordFile,"r")
+    password = f.read()
+    f.close()
+    
+    service.userPin = int(password)
+
+except FileNotFoundError:
+    print("File storing passwords hasnt been found please recheck path specification or file existence and try again")
+except ValueError:
+    print("Check if the passcode is stored is in the valid format within the password file")
+
+
 service.ServiesSubSystem()

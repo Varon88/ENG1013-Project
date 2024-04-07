@@ -8,6 +8,7 @@
 import ControlSubSystem as control
 
 # Iniitalization of system variables
+passwordFile = "/Users/varonrasiah/Documents/Moansh/ENG1013/Project/Code/password.txt"
 userPin = 1234
 pollingFrequency = 5
 
@@ -79,6 +80,8 @@ def ServiesSubSystem():
                 print("Incorrect pin! exiting program.")
                 break
         elif mode == 4:
+            passwordPersistence(userPin)
+            print("Exiting program functionality")
             break
 
 
@@ -94,3 +97,14 @@ def authenticate(userEnteredPassCode):
         return True
     else:
         return False
+    
+
+def passwordPersistence(pin):
+    # try:
+    f = open(passwordFile,"w")
+    f.write(str(pin))
+    f.close()
+    # except:
+    print("some error has occured during the file write operation in trying to persist the user pass code.")
+
+

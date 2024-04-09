@@ -12,7 +12,14 @@ passwordFile = "/Users/varonrasiah/Documents/Moansh/ENG1013/Project/Code/passwor
 userPin = 1234
 pollingFrequency = 5
 
-def ServiesSubSystem():
+def Servies_Sub_System():
+
+    """
+        The function that hold the main functionality of the servies subsystem
+        No parameters are taken in.
+        Contains the main menu
+        
+    """
 
     global userPin
     global pollingFrequency
@@ -31,9 +38,9 @@ def ServiesSubSystem():
                 print("Enter a valid input of 1,2 or 3")
         
         if mode == 1:
-            control.ControlSubSystem(mode)
+            control.Control_Sub_System(mode)
         elif mode == 2:
-            control.ControlSubSystem(mode)
+            control.Control_Sub_System(mode)
         elif mode == 3:
 
             passwordTries = 0 
@@ -83,7 +90,7 @@ def ServiesSubSystem():
                 print("Incorrect pin! exiting program.")
                 break
         elif mode == 4:
-            passwordPersistence(userPin)
+            password_Persistence(userPin)
             print("Exiting program functionality")
             break
 
@@ -92,17 +99,36 @@ def ServiesSubSystem():
 
 
 def display(pin):
-    print(pin)
+
+    """
+        Function is used to display needed element on the seven segement display
+        1 prameter named pin is taken in, This usually holds the user pin
+    
+    """
+
+    print(f" seven segement display outputs -> {pin}")
 
 
 def authenticate(userEnteredPassCode):
+
+    """
+        Function is used to authenticate the user entered pin
+        1 parameter of type integer is taken in.
+    """
+
     if userEnteredPassCode == userPin:
         return True
     else:
         return False
     
 
-def passwordPersistence(pin):
+def password_Persistence(pin):
+
+    """
+        Function saves the user edited passcode on to the file specified.
+        takes in 1 parameter named pin of type int
+    """
+
     try:
         f = open(passwordFile,"w")
         f.write(str(pin))
@@ -112,6 +138,12 @@ def passwordPersistence(pin):
 
 
 def print_welcome_screen():
+
+    """
+        Function that prints in the formatted main menu
+        No parameters taken in
+    """
+
     print()
     print("================================================================================")
     print("============================= Main Menu ========================================")
@@ -119,8 +151,8 @@ def print_welcome_screen():
     print()
     print("Modes Available --> ")
     print()
-    print("       1 : for Normal Operation Mode")
-    print("       2 : for Data Observation Mode")
+    print("       1 : For Normal Operation Mode")
+    print("       2 : For Data Observation Mode")
     print("       3 : Maintenence and Adjustment Mode")
     print("       4 : Terminate program")
     print()
@@ -130,6 +162,12 @@ def print_welcome_screen():
 
 
 def print_system_variable_edit_menu():
+
+    """
+        Function that prints in the formatted system settings menu
+        No parameters taken in
+    """
+
     print()
     print("================================================================================")
     print("============================= System Variables =================================")

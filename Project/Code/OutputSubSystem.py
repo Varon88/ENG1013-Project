@@ -4,7 +4,12 @@
 # Created Date: 22/03/2024
 # version ='1.0'
 
-def OutputSubSystem(startStage):
+def Output_Sub_System(startStage):
+
+    """
+        Function thats controls the outputs as a whole. This also includes the light sequenences.
+        A single parameter is taken in named startStage that takes in what stage of the light sequnce needs to be output
+    """
 
     if startStage == 1:
         # print lights for stage 1 and follow for all.

@@ -36,6 +36,9 @@ def Servies_Sub_System():
                     break
             except ValueError:
                 print("Enter a valid input of 1,2 or 3")
+            except KeyboardInterrupt:
+                print("\nKeyboard interupt not allowed enter 4 in the main menu to exit program functionlaity")
+                pass
         
         if mode == 1:
             control.Control_Sub_System(mode)

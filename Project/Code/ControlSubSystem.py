@@ -31,9 +31,9 @@ def Control_Sub_System(mode):
                 pollingLoopStartTime = time.time()
 
                 # this has to be re written with the modularized version in the actual implementation
-                sensorInput = input.Input_Sub_System(1)
-                buttonInput = input.Input_Sub_System(2)
                 conditionState = check_conditions(sensorInput,buttonInput,"t")
+                sensorInput = [] 
+                buttonInput = []
                 if conditionState == 1:
                     # light_sequence(1)
                     light_sequence_test(1)

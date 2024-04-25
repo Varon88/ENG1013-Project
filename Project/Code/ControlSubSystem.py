@@ -9,6 +9,7 @@ import time as time
 import InputSubSystem as input 
 import OutputSubSystem as output
 import ServicesSubSystem as service
+import matplotlib.pyplot as plt
 
 # light_sequence() parameters; 1 - start from start stage 1 and go on until stage 3; 4 - start from start stage 4 to stage 6
 
@@ -17,6 +18,8 @@ buttonInput = []
 
 def Control_Sub_System(mode):
     
+    global sensorInput
+    global buttonInput
     """
         Function houses the main functionality of the control subsytem
         Takes in a parameter named mode that houses the mode.
@@ -24,8 +27,8 @@ def Control_Sub_System(mode):
 
     if mode == 1:
         try:
-            # light_sequence(0) -- to be used in the real scenario where output should be maintained for prolonged periods of time
-            light_sequence_test(0) #test function with similar functionaly is used
+            light_sequence(0) #-- to be used in the real scenario where output should be maintained for prolonged periods of time
+            # light_sequence_test(0) #test function with similar functionaly is used
             while True:
 
                 pollingLoopStartTime = time.time()
@@ -35,18 +38,17 @@ def Control_Sub_System(mode):
                 sensorInput = [] 
                 buttonInput = []
                 if conditionState == 1:
-                    # light_sequence(1)
-                    light_sequence_test(1)
+                    light_sequence(1)
+                    # light_sequence_test(1)
                 elif conditionState == 2:
-                    # light_sequence(4)
-                    light_sequence_test(4)
+                    light_sequence(4)
+                    # light_sequence_test(4)
                 elif conditionState == 3:
-                    # light_sequence(1)
-                    light_sequence_test(1)
+                    light_sequence(1)
+                    # light_sequence_test(1)
                 
-                time.sleep(service.pollingFrequency)
 
-                print(f"polling loop cycle time : {get_current_time() - pollingLoopStartTime}\n")
+                print(f"polling loop time : {get_current_time() - pollingLoopStartTime}\n")
 
         except KeyboardInterrupt:
             print("")
@@ -56,11 +58,24 @@ def Control_Sub_System(mode):
 
         try:
             print("Data Observation mode")
-            while True:
-                print(f"Sensor 1 input : {input.Input_Sub_System(1)}")
-                print(f"Button input : {input.Input_Sub_System(2)}")
-                
-                time.sleep(service.pollingFrequency)
+            if len(input.ultra_sonic_distance_input) >= round(20/service.pollingFrequency):
+                distance = input.ultra_sonic_distance_input
+                correspondingTime = input.ultra_sonic_time_input
+                elementCount = round(20/service.pollingFrequency)
+                distancesLast20Seconds = distance[-elementCount:]
+                timeLast20Seconds = correspondingTime[-elementCount:]
+                plt.ion()
+                plt.gca().cla()
+                plt.plot(timeLast20Seconds,distancesLast20Seconds)
+                plt.legend("Last 20 seconds")
+                plt.title("Distance against Time (last 20 seconds)")
+                plt.xlabel("Time is seconds")
+                plt.ylabel("Distances in cm")
+                plt.draw()
+
+            else:
+                print("Insufficient data to generate graphs.")
+                service.display("Err")
         
         except KeyboardInterrupt:
             print("")
@@ -69,15 +84,10 @@ def Control_Sub_System(mode):
 
 
 
-"""
-    Controls how the whole lighting sequence with periodic sensor polls based on the polling rate set
-    Stages of the light sequenes are implemented with the required time delay.
-
-"""
 def light_sequence(startStage):
 
     """
-        Function controls the light sequence stages
+        Controls how the whole lighting sequence with periodic sensor polls based on the polling rate set Stages of the light sequenes are implemented with the required time delay.
         Takes in 1 parameter named startStage of that holds the stage sequence this is an integer
     """
 
@@ -86,75 +96,113 @@ def light_sequence(startStage):
         # check for the start time of the sequence to check and append sensor polls within the output sequnces - has to be done for all the below implementations
         stageOneStartTime = get_current_time()
 
-        initialTime0 = get_current_time()
-        timeDifference0 = 0 
-        while timeDifference0 <= 1.5:
-            output.Output_Sub_System(0)
-            timeDifference0 = get_current_time() - initialTime0
-            if (stageOneStartTime - get_current_time())% service.pollingFrequency == 0:
-                poll_Sensors()
+        # initialTime0 = get_current_time()
+        # timeDifference0 = 0 
+        # while timeDifference0 <= 1.5:
+        #     output.Output_Sub_System(0)
+        #     if (round(get_current_time() - stageOneStartTime))% service.pollingFrequency == 0:
+        #         poll_Sensors()
+        #         print(f"Time after which sensors are polled after the start of stage 1 : {get_current_time() - stageOneStartTime}\n")
+        #     if (round(get_current_time() - stageOneStartTime))% 2 == 0:
+        #         print_nearest_distance()
+        #     timeDifference0 = get_current_time() - initialTime0
+                
         
+        print(f"Traffic light stage = {startStage}")
         initialTime = get_current_time()
         timeDiffrerence = 0 
         while timeDiffrerence <= 30.0:
             output.Output_Sub_System(startStage)
-            timeDiffrerence = get_current_time() - initialTime
-            if (stageOneStartTime - get_current_time())% service.pollingFrequency == 0:
+            if (round(get_current_time() - stageOneStartTime))% service.pollingFrequency == 0:
                 poll_Sensors()
+                print(f"Time after which sensors are polled after the start of stage 1 : {get_current_time() - stageOneStartTime}\n")
+            if (round(get_current_time() - stageOneStartTime))% 2 == 0:
+                print_nearest_distance()
+            timeDiffrerence = get_current_time() - initialTime
+        output.turn_off_sequnce(startStage)
 
+        print(f"Traffic light stage = {startStage+1}")
         initialTime2 = get_current_time()
         timeDifference2 = 0 
         while timeDifference2 <= 3:
             output.Output_Sub_System(startStage+1)
-            timeDifference2 = get_current_time() - initialTime2
-            if (stageOneStartTime - get_current_time())% service.pollingFrequency == 0:
+            if (round(get_current_time() - stageOneStartTime))% service.pollingFrequency == 0:
                 poll_Sensors()
+                print(f"Time after which sensors are polled after the start of stage 1 : {get_current_time() - stageOneStartTime}\n")
+            if (round(get_current_time() - stageOneStartTime))% 2 == 0:
+                print_nearest_distance()
+            timeDifference2 = get_current_time() - initialTime2
+        output.turn_off_sequnce(startStage+1)
 
-
+        
+        total_number_presses()
+        print(f"Traffic light stage = {startStage+2}")
         initialTime3 = get_current_time()
         timeDifference3 = 0 
         while timeDifference3 <= 3:
             output.Output_Sub_System(startStage+2)
-            timeDifference3 = get_current_time() - initialTime3
-            if (stageOneStartTime - get_current_time())% service.pollingFrequency == 0:
+            if (round(get_current_time() - stageOneStartTime))% service.pollingFrequency == 0:
                 poll_Sensors()
+                print(f"Time after which sensors are polled after the start of stage 1 : {get_current_time() - stageOneStartTime}\n")
+            if (round(get_current_time() - stageOneStartTime))% 2 == 0:
+                print_nearest_distance()
+            timeDifference3 = get_current_time() - initialTime3
+        output.turn_off_sequnce(startStage+2)
 
     elif startStage == 4:
 
         stageFourStartTime = get_current_time()
 
         # implemented a seperate output sequnce to make sure there is a smooth transistion between the red lights to green lights
-        initialTime0 = get_current_time()
-        timeDifference0 = 0 
-        while timeDifference0 <= 1.5:
-            output.Output_Sub_System(3.5)
-            timeDifference0 = get_current_time() - initialTime0 
-            if (stageFourStartTime - get_current_time())% service.pollingFrequency == 0:
-                poll_Sensors()
+        # initialTime0 = get_current_time()
+        # timeDifference0 = 0 
+        # while timeDifference0 <= 1.5:
+        #     output.Output_Sub_System(3.5)
+        #     if (round(get_current_time() - stageFourStartTime))% service.pollingFrequency == 0:
+        #         poll_Sensors()
+        #         print(f"Time after which sensors are polled after the start of stage 3 : {get_current_time() - stageFourStartTime}\n")
+        #     if (round(get_current_time() - stageFourStartTime))% 2 == 0:
+        #         print_nearest_distance()
+        #     timeDifference0 = get_current_time() - initialTime0 
 
+        print(f"Traffic light stage = {startStage}")
         initialTime = get_current_time()
         timeDiffrerence = 0 
         while timeDiffrerence <= 30.0:
             output.Output_Sub_System(startStage)
-            timeDiffrerence = get_current_time() - initialTime
-            if (stageFourStartTime - get_current_time())% service.pollingFrequency == 0:
+            if (round(get_current_time() - stageFourStartTime))% service.pollingFrequency == 0:
                 poll_Sensors()
+                print(f"Time after which sensors are polled after the start of stage 3 : {get_current_time() - stageFourStartTime}\n")
+            if (round(get_current_time() - stageFourStartTime))% 2 == 0:
+                print_nearest_distance()
+            timeDiffrerence = get_current_time() - initialTime
+        output.turn_off_sequnce(startStage)
 
+        print(f"Traffic light stage = {startStage+1}")
         initialTime2 = get_current_time()
         timeDifference2 = 0 
         while timeDifference2 <= 3:
             output.Output_Sub_System(startStage+1)
-            timeDifference2 = get_current_time() - initialTime2
-            if (stageFourStartTime - get_current_time())% service.pollingFrequency == 0:
+            if (round(get_current_time() - stageFourStartTime))% service.pollingFrequency == 0:
                 poll_Sensors()
+                print(f"Time after which sensors are polled after the start of stage 3 : {get_current_time() - stageFourStartTime}\n")
+            if (round(get_current_time() - stageFourStartTime))% 2 == 0:
+                print_nearest_distance()
+            timeDifference2 = get_current_time() - initialTime2
+        output.turn_off_sequnce(startStage+1)
 
+        print(f"Traffic light stage = {startStage+2}")
         initialTime3 = get_current_time()
         timeDifference3 = 0 
         while timeDifference3 <= 3:
             output.Output_Sub_System(startStage+2)
-            timeDifference3 = get_current_time() - initialTime3
-            if (stageFourStartTime - get_current_time())% service.pollingFrequency == 0:
+            if (round(get_current_time() - stageFourStartTime))% service.pollingFrequency == 0:
                 poll_Sensors()
+                print(f"Time after which sensors are polled after the start of stage 1 : {get_current_time() - stageFourStartTime}\n")
+            if (round(get_current_time() - stageFourStartTime))% 2 == 0:
+                print_nearest_distance()
+            timeDifference3 = get_current_time() - initialTime3
+        output.turn_off_sequnce(startStage+2)
     
     elif startStage == 0:
 
@@ -162,28 +210,42 @@ def light_sequence(startStage):
 
         initialTime = get_current_time()
         timeDiffrerence = 0 
+        print(f"Traffic light stage = {startStage+1}")
         while timeDiffrerence <= 30.0:
             output.Output_Sub_System(startStage+1)
-            timeDiffrerence = get_current_time() - initialTime
-            if (stageZeroStartTime - get_current_time())% service.pollingFrequency == 0:
+            if (round(get_current_time() - stageZeroStartTime))% service.pollingFrequency == 0:
                 poll_Sensors()
+                print(f"Time after which sensors are polled after the start of stage 1 : {get_current_time() - stageZeroStartTime}\n")
+            if (round(get_current_time() - stageZeroStartTime))% 2 == 0:
+                print_nearest_distance()
+            timeDiffrerence = get_current_time() - initialTime
+        output.turn_off_sequnce(startStage+1)
 
         initialTime2 = get_current_time()
         timeDifference2 = 0 
+        print(f"Traffic light stage = {startStage+2}")
         while timeDifference2 <= 3:
             output.Output_Sub_System(startStage+2)
-            timeDifference2 = get_current_time() - initialTime2
-            if (stageZeroStartTime - get_current_time())% service.pollingFrequency == 0:
+            if (round(get_current_time() - stageZeroStartTime))% service.pollingFrequency == 0:
                 poll_Sensors()
+                print(f"Time after which sensors are polled after the start of stage 1 : {get_current_time() - stageZeroStartTime}\n")
+            if (round(get_current_time() - stageZeroStartTime))% 2 == 0:
+                print_nearest_distance()
+            timeDifference2 = get_current_time() - initialTime2
+        output.turn_off_sequnce(startStage+2)
 
-
+        print(f"Traffic light stage = {startStage+3}")
         initialTime3 = get_current_time()
         timeDifference3 = 0 
         while timeDifference3 <= 3:
             output.Output_Sub_System(startStage+3)
-            timeDifference3 = get_current_time() - initialTime3
-            if (stageZeroStartTime - get_current_time())% service.pollingFrequency == 0:
+            if (round(get_current_time() - stageZeroStartTime))% service.pollingFrequency == 0:
                 poll_Sensors()
+                print(f"Time after which sensors are polled after the start of stage 1 : {get_current_time() - stageZeroStartTime}\n")
+            if (round(get_current_time() - stageZeroStartTime))% 2 == 0:
+                print_nearest_distance()
+            timeDifference3 = get_current_time() - initialTime3
+        output.turn_off_sequnce(startStage+3)
 
 
 
@@ -191,20 +253,33 @@ def light_sequence(startStage):
 
 
 # used to store the number of times condition 1 and condition 2 are run and change the task run accordingly
-conditionState1Count = 0
-conditionState2Count = 0
+conditionState1Count = 1
+conditionState2Count = 1
 
 def check_conditions(buttonInput, SensorInput,mode):
 
     """
         Function checks the conditions based on the sensor 
-        2 parameters are taken in named buttonInput and sensorInput. Both of type list
+        3 parameters are taken in named buttonInput, sensorInput and mode. Of type list, list and string correspondignly
+        mode is used to put the check conditions in to a test stage or non functional stage
     """
+    global conditionState1Count 
+    global conditionState2Count 
 
     if mode == "t":
-        global conditionState1Count 
-        global conditionState2Count 
-        # these assigments are just test assignemnet proper conditions should be implemented in the future under the else section
+
+        if conditionState1Count%2 == 1:
+            conditionState1Count += 1
+            return 1
+        else:
+            conditionState1Count += 1
+            return 2
+        
+        
+
+
+    # these assigments are just test assignemnet proper conditions should be implemented in the future under the else section
+    elif mode == "n":
         if buttonInput >= 3 and SensorInput >= 100:
             if conditionState2Count <= 1:
                 conditionState = 2
@@ -222,8 +297,7 @@ def check_conditions(buttonInput, SensorInput,mode):
                 conditionState1Count = 0
     
         return conditionState
-    else:
-        print("actual conditions to be implemented")
+        
 
 
 
@@ -302,3 +376,26 @@ def poll_Sensors():
     global buttonInput
     sensorInput.append(input.Input_Sub_System(1)) 
     buttonInput.append(input.Input_Sub_System(2))
+
+
+
+def print_nearest_distance():
+
+    """
+        Function prints to the console the distance to the nearest vehicle on demand
+        Parameters : None
+    """
+    global sensorInput
+
+    minDistance = min(sensorInput)
+    print(f"Distance to the nearest vehicle {round(minDistance,2)}")
+
+
+
+def total_number_presses():
+    """
+        displays the number of button presses at the current state
+    """
+    global buttonInput
+
+    print(f"Number of button presses : {buttonInput.count(1)}")

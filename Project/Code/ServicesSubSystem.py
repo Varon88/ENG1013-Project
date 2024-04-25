@@ -5,15 +5,18 @@
 # version ='1.0'
 
 
-import ControlSubSystem as control
 from pymata4 import pymata4
+try:
+    board = pymata4.Pymata4()
+except:
+    print("Board Instance ID has timed out. Try reconnecting the board and restart the code")
+import ControlSubSystem as control
 import time
 
 # Iniitalization of system variables
 passwordFile = "/Users/varonrasiah/Documents/Moansh/ENG1013/Project/Code/password.txt"
 userPin = 1234
-pollingFrequency = 5
-board = pymata4.Pymata4()
+pollingFrequency = 1
 pins = []
 
 lookupDictionary = {
@@ -27,14 +30,16 @@ lookupDictionary = {
     "7" : "1110000",
     "8" : "1111111",
     "9" : "1111011",
-    
+
     "A" : "1110111",
     "B" : "1111111",
     "C" : "1001110",
     "D" : "1111110",
     "E" : "1001111",
     "F" : "1000111",
-    "G" : "1101111"
+    "G" : "1011110",
+    "r" : "0000101",
+    "U" : "0111110"
 }
 
 def Servies_Sub_System():
@@ -48,8 +53,6 @@ def Servies_Sub_System():
 
     global userPin
     global pollingFrequency
-
-    initialize_display_pins()
 
     while True:
         while True:
@@ -85,9 +88,10 @@ def Servies_Sub_System():
                 passwordTries += 1
                 pinCondition = authenticate(userEnteredPasscode)
                 if pinCondition == True:
-                    display("AG")
+                    display("ACCG")
                     break
                 else:
+                    display("Err")
                     print(f"Incorrect pin entered please try again; Tries remaining = {3-passwordTries}")
 
             if pinCondition == True:
@@ -102,18 +106,26 @@ def Servies_Sub_System():
                 if systemVarChangeSelection == 1:
                     while True:
                         try:
-                            newPin = int(str(input("Enter new pin --> ")))  
-                            break
+                            newPin = int(str(input("Enter new pin of 4 digits--> ")))  
+                            if len(str(newPin)) == 4:
+                                display(str(newPin))
+                                break
+                            else:
+                                display("Err")
+                                print("Pin requires 4 digits. Please try again.")
                         except ValueError:
+                            display("Err")
                             print("please enter a set of digits and not letters or any other symbols")
-                    userPin =newPin
+                    display("5UC5")
+                    userPin = newPin
                 elif systemVarChangeSelection == 2:
                     while True:
                         try:
-                            newPollingFreq = int(str(input("Enter new polling frequency --> ")))  #validate the pin
+                            newPollingFreq = int(str(input("Enter new polling frequency --> "))) 
                             break
                         except ValueError:
-                            print("please enter a set of digits and not letters or any other symbols")
+                            display("Err")
+                            print("Please enter a set of digits and not letters or any other symbols")
                     pollingFrequency = newPollingFreq
                 elif systemVarChangeSelection == 3:
                     pass
@@ -122,6 +134,8 @@ def Servies_Sub_System():
                 break
         elif mode == 4:
             password_Persistence(userPin)
+            print("Shutting down-board")
+            board.shutdown()
             print("Exiting program functionality")
             break
 
@@ -185,7 +199,7 @@ def display(displayString):
         1 prameter named pin is taken in, This usually holds the user pin
     
     """
-    
+    initialize_display_pins()
     repetitionFactor = 0
     startTime = time.time()
     displayTime = 0

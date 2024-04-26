@@ -16,7 +16,7 @@ ultra_sonic_distance_input = []
 ultra_sonic_time_input = [] #Persisting input data in the subsystem for other usages with relevant time when required. eg graphing
 push_button_input = []
 
-def Input_Sub_System(type):
+def input_sub_system(type):
 
     global ultra_sonic_distance_input
     global ultra_sonic_time_input

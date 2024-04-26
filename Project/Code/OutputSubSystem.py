@@ -19,7 +19,7 @@ PR = 7
 PG = 6
 
 
-def Output_Sub_System(startStage):
+def output_sub_system(startStage):
 
     """
         Function thats controls the outputs as a whole. This also includes the light sequenences.

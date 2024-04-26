@@ -42,7 +42,7 @@ lookupDictionary = {
     "U" : "0111110"
 }
 
-def Servies_Sub_System():
+def servies_sub_system():
 
     """
         The function that hold the main functionality of the servies subsystem
@@ -71,9 +71,9 @@ def Servies_Sub_System():
                 pass
         
         if mode == 1:
-            control.Control_Sub_System(mode)
+            control.control_sub_system(mode)
         elif mode == 2:
-            control.Control_Sub_System(mode)
+            control.control_sub_system(mode)
         elif mode == 3:
 
             passwordTries = 0 

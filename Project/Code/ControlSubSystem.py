@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 sensorInput = []
 buttonInput = []
 
-def Control_Sub_System(mode):
+def control_sub_system(mode):
     
     global sensorInput
     global buttonInput
@@ -27,13 +27,12 @@ def Control_Sub_System(mode):
 
     if mode == 1:
         try:
-            light_sequence(0) #-- to be used in the real scenario where output should be maintained for prolonged periods of time
-            # light_sequence_test(0) #test function with similar functionaly is used
+            light_sequence(0) # <-- to be used in the real scenario where output should be maintained for prolonged periods of time
+            # light_sequence_test(0) # <-- test function with similar functionaly is used, similar ones used below
             while True:
 
                 pollingLoopStartTime = time.time()
 
-                # this has to be re written with the modularized version in the actual implementation
                 conditionState = check_conditions(sensorInput,buttonInput,"t")
                 sensorInput = [] 
                 buttonInput = []
@@ -99,7 +98,7 @@ def light_sequence(startStage):
         # initialTime0 = get_current_time()
         # timeDifference0 = 0 
         # while timeDifference0 <= 1.5:
-        #     output.Output_Sub_System(0)
+        #     output.output_sub_system(0)
         #     if (round(get_current_time() - stageOneStartTime))% service.pollingFrequency == 0:
         #         poll_Sensors()
         #         print(f"Time after which sensors are polled after the start of stage 1 : {get_current_time() - stageOneStartTime}\n")
@@ -112,7 +111,7 @@ def light_sequence(startStage):
         initialTime = get_current_time()
         timeDiffrerence = 0 
         while timeDiffrerence <= 30.0:
-            output.Output_Sub_System(startStage)
+            output.output_sub_system(startStage)
             if (round(get_current_time() - stageOneStartTime))% service.pollingFrequency == 0:
                 poll_Sensors()
                 print(f"Time after which sensors are polled after the start of stage 1 : {get_current_time() - stageOneStartTime}\n")
@@ -125,7 +124,7 @@ def light_sequence(startStage):
         initialTime2 = get_current_time()
         timeDifference2 = 0 
         while timeDifference2 <= 3:
-            output.Output_Sub_System(startStage+1)
+            output.output_sub_system(startStage+1)
             if (round(get_current_time() - stageOneStartTime))% service.pollingFrequency == 0:
                 poll_Sensors()
                 print(f"Time after which sensors are polled after the start of stage 1 : {get_current_time() - stageOneStartTime}\n")
@@ -140,7 +139,7 @@ def light_sequence(startStage):
         initialTime3 = get_current_time()
         timeDifference3 = 0 
         while timeDifference3 <= 3:
-            output.Output_Sub_System(startStage+2)
+            output.output_sub_system(startStage+2)
             if (round(get_current_time() - stageOneStartTime))% service.pollingFrequency == 0:
                 poll_Sensors()
                 print(f"Time after which sensors are polled after the start of stage 1 : {get_current_time() - stageOneStartTime}\n")
@@ -157,7 +156,7 @@ def light_sequence(startStage):
         # initialTime0 = get_current_time()
         # timeDifference0 = 0 
         # while timeDifference0 <= 1.5:
-        #     output.Output_Sub_System(3.5)
+        #     output.output_sub_system(3.5)
         #     if (round(get_current_time() - stageFourStartTime))% service.pollingFrequency == 0:
         #         poll_Sensors()
         #         print(f"Time after which sensors are polled after the start of stage 3 : {get_current_time() - stageFourStartTime}\n")
@@ -169,7 +168,7 @@ def light_sequence(startStage):
         initialTime = get_current_time()
         timeDiffrerence = 0 
         while timeDiffrerence <= 30.0:
-            output.Output_Sub_System(startStage)
+            output.output_sub_system(startStage)
             if (round(get_current_time() - stageFourStartTime))% service.pollingFrequency == 0:
                 poll_Sensors()
                 print(f"Time after which sensors are polled after the start of stage 3 : {get_current_time() - stageFourStartTime}\n")
@@ -182,7 +181,7 @@ def light_sequence(startStage):
         initialTime2 = get_current_time()
         timeDifference2 = 0 
         while timeDifference2 <= 3:
-            output.Output_Sub_System(startStage+1)
+            output.output_sub_system(startStage+1)
             if (round(get_current_time() - stageFourStartTime))% service.pollingFrequency == 0:
                 poll_Sensors()
                 print(f"Time after which sensors are polled after the start of stage 3 : {get_current_time() - stageFourStartTime}\n")
@@ -195,7 +194,7 @@ def light_sequence(startStage):
         initialTime3 = get_current_time()
         timeDifference3 = 0 
         while timeDifference3 <= 3:
-            output.Output_Sub_System(startStage+2)
+            output.output_sub_system(startStage+2)
             if (round(get_current_time() - stageFourStartTime))% service.pollingFrequency == 0:
                 poll_Sensors()
                 print(f"Time after which sensors are polled after the start of stage 1 : {get_current_time() - stageFourStartTime}\n")
@@ -212,7 +211,7 @@ def light_sequence(startStage):
         timeDiffrerence = 0 
         print(f"Traffic light stage = {startStage+1}")
         while timeDiffrerence <= 30.0:
-            output.Output_Sub_System(startStage+1)
+            output.output_sub_system(startStage+1)
             if (round(get_current_time() - stageZeroStartTime))% service.pollingFrequency == 0:
                 poll_Sensors()
                 print(f"Time after which sensors are polled after the start of stage 1 : {get_current_time() - stageZeroStartTime}\n")
@@ -225,7 +224,7 @@ def light_sequence(startStage):
         timeDifference2 = 0 
         print(f"Traffic light stage = {startStage+2}")
         while timeDifference2 <= 3:
-            output.Output_Sub_System(startStage+2)
+            output.output_sub_system(startStage+2)
             if (round(get_current_time() - stageZeroStartTime))% service.pollingFrequency == 0:
                 poll_Sensors()
                 print(f"Time after which sensors are polled after the start of stage 1 : {get_current_time() - stageZeroStartTime}\n")
@@ -238,7 +237,7 @@ def light_sequence(startStage):
         initialTime3 = get_current_time()
         timeDifference3 = 0 
         while timeDifference3 <= 3:
-            output.Output_Sub_System(startStage+3)
+            output.output_sub_system(startStage+3)
             if (round(get_current_time() - stageZeroStartTime))% service.pollingFrequency == 0:
                 poll_Sensors()
                 print(f"Time after which sensors are polled after the start of stage 1 : {get_current_time() - stageZeroStartTime}\n")
@@ -317,50 +316,50 @@ def light_sequence_test(startStage):
         Same parameters would be used
     """
     if startStage == 1:
-        output.Output_Sub_System(0)
+        output.output_sub_system(0)
         print("runs for 3 seconds")
         print("")
 
-        output.Output_Sub_System(startStage)
+        output.output_sub_system(startStage)
         print("runs for 30 seconds")
         print("")
 
-        output.Output_Sub_System(startStage+1)
+        output.output_sub_system(startStage+1)
         print("runs for 3 seconds")
         print("")
 
-        output.Output_Sub_System(startStage+2)
+        output.output_sub_system(startStage+2)
         print("runs for 3 seconds")
         print("")
 
     if startStage == 4:
-        output.Output_Sub_System(3.5)
+        output.output_sub_system(3.5)
         print("runs for 3 seconds")
         print("")
 
-        output.Output_Sub_System(startStage)
+        output.output_sub_system(startStage)
         print("runs for 30 seconds")
         print("")
 
-        output.Output_Sub_System(startStage+1)
+        output.output_sub_system(startStage+1)
         print("runs for 3 seconds")
         print("")
 
-        output.Output_Sub_System(startStage+2)
+        output.output_sub_system(startStage+2)
         print("runs for 3 seconds")
         print("")
 
 
     if startStage == 0:
-        output.Output_Sub_System(startStage+1)
+        output.output_sub_system(startStage+1)
         print("runs for 30 seconds")
         print("")
 
-        output.Output_Sub_System(startStage+2)
+        output.output_sub_system(startStage+2)
         print("runs for 3 seconds")
         print("")
 
-        output.Output_Sub_System(startStage+3)
+        output.output_sub_system(startStage+3)
         print("runs for 3 seconds")
         print("")
 
@@ -374,8 +373,8 @@ def poll_Sensors():
 
     global sensorInput 
     global buttonInput
-    sensorInput.append(input.Input_Sub_System(1)) 
-    buttonInput.append(input.Input_Sub_System(2))
+    sensorInput.append(input.input_sub_system(1)) 
+    buttonInput.append(input.input_sub_system(2))
 
 
 

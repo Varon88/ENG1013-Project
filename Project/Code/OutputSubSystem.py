@@ -33,39 +33,32 @@ def output_sub_system(startStage):
         # print lights for stage 1 and follow for all.
         board.digital_write(MG,1)
         board.digital_write(SR,1)
-        board.digital_write(PR,1)
-        # print(f"Traffic light stage = {startStage}")
-        
+        board.digital_write(PR,1)        
 
     elif startStage == 2:
         board.digital_write(MY,1)
         board.digital_write(SR,1)
         board.digital_write(PR,1)
-        # print(f"Traffic light stage = {startStage}")
     
     elif startStage == 3:
         board.digital_write(MR,1)
         board.digital_write(SR,1)
         board.digital_write(PR,1)
-        # print(f"Traffic light stage = {startStage}")
     
     elif startStage == 4:
         board.digital_write(MR,1)
         board.digital_write(SG,1)
         board.digital_write(PG,1)
-        print(f"Traffic light stage = {startStage}")
 
     elif startStage == 5:
         board.digital_write(MR,1)
         board.digital_write(SY,1)
         board.digital_write(PG,1)
-        print(f"Traffic light stage = {startStage}")
     
     elif startStage == 6:
         board.digital_write(MR,1)
         board.digital_write(SR,1)
         board.digital_write(PR,1)
-        print(f"Traffic light stage = {startStage}")
 
 
 

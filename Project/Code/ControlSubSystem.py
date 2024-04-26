@@ -183,9 +183,9 @@ def light_sequence(startStage):
 
         stageZeroStartTime = get_current_time()
 
+        print(f"Traffic light stage = {startStage+1}")
         initialTime = get_current_time()
         timeDiffrerence = 0 
-        print(f"Traffic light stage = {startStage+1}")
         while timeDiffrerence <= 30.0:
             output.output_sub_system(startStage+1)
             if (round(get_current_time() - stageZeroStartTime))% service.pollingFrequency == 0:
@@ -196,9 +196,9 @@ def light_sequence(startStage):
             timeDiffrerence = get_current_time() - initialTime
         output.turn_off_sequnce(startStage+1)
 
+        print(f"Traffic light stage = {startStage+2}")
         initialTime2 = get_current_time()
         timeDifference2 = 0 
-        print(f"Traffic light stage = {startStage+2}")
         while timeDifference2 <= 3:
             output.output_sub_system(startStage+2)
             if (round(get_current_time() - stageZeroStartTime))% service.pollingFrequency == 0:

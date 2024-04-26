@@ -67,15 +67,6 @@ def output_sub_system(startStage):
         board.digital_write(PR,1)
         print(f"Traffic light stage = {startStage}")
 
-    elif startStage == 0:
-        print("Main Road Traffic Light --> yellow")
-        print("Side Road Traffic Light --> Red")
-        print("Pedestrian Lights --> Red")
-
-    elif startStage == 3.5:
-        print("Main Road Traffic Light --> Red")
-        print("Side Road Traffic Light --> Yellow")
-        print("Pedestrian Lights --> Yellow")       
 
 
 

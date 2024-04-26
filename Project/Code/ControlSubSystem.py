@@ -94,18 +94,6 @@ def light_sequence(startStage):
 
         # check for the start time of the sequence to check and append sensor polls within the output sequnces - has to be done for all the below implementations
         stageOneStartTime = get_current_time()
-
-        # initialTime0 = get_current_time()
-        # timeDifference0 = 0 
-        # while timeDifference0 <= 1.5:
-        #     output.output_sub_system(0)
-        #     if (round(get_current_time() - stageOneStartTime))% service.pollingFrequency == 0:
-        #         poll_Sensors()
-        #         print(f"Time after which sensors are polled after the start of stage 1 : {get_current_time() - stageOneStartTime}\n")
-        #     if (round(get_current_time() - stageOneStartTime))% 2 == 0:
-        #         print_nearest_distance()
-        #     timeDifference0 = get_current_time() - initialTime0
-                
         
         print(f"Traffic light stage = {startStage}")
         initialTime = get_current_time()
@@ -151,18 +139,6 @@ def light_sequence(startStage):
     elif startStage == 4:
 
         stageFourStartTime = get_current_time()
-
-        # implemented a seperate output sequnce to make sure there is a smooth transistion between the red lights to green lights
-        # initialTime0 = get_current_time()
-        # timeDifference0 = 0 
-        # while timeDifference0 <= 1.5:
-        #     output.output_sub_system(3.5)
-        #     if (round(get_current_time() - stageFourStartTime))% service.pollingFrequency == 0:
-        #         poll_Sensors()
-        #         print(f"Time after which sensors are polled after the start of stage 3 : {get_current_time() - stageFourStartTime}\n")
-        #     if (round(get_current_time() - stageFourStartTime))% 2 == 0:
-        #         print_nearest_distance()
-        #     timeDifference0 = get_current_time() - initialTime0 
 
         print(f"Traffic light stage = {startStage}")
         initialTime = get_current_time()

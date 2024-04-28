@@ -235,8 +235,8 @@ def check_conditions(buttonInput, SensorInput,mode):
 
     """
         Function checks the conditions based on the sensor 
-        3 parameters are taken in named buttonInput, sensorInput and mode. Of type list, list and string correspondignly
-        mode is used to put the check conditions in to a test stage or non functional stage
+        3 parameters are taken in named buttonInput, sensorInput and mode. Of type list, list and string correspondingly
+        mode is used to put the check conditions in to a test stage or non-functional stage
     """
     global conditionState1Count 
     global conditionState2Count 
@@ -265,10 +265,10 @@ def check_conditions(buttonInput, SensorInput,mode):
             
         elif buttonInput <= 3 and SensorInput <= 50:
             if conditionState1Count <= 2:
-                conditionState == 1
+                conditionState = 1
                 conditionState1Count += 1
             else:
-                conditionState == 2
+                conditionState = 2
                 conditionState1Count = 0
     
         return conditionState

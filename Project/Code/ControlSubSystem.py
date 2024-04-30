@@ -364,7 +364,7 @@ def print_nearest_distance():
     """
     global sensorInput
 
-    minDistance = min(sensorInput)
+    minDistance = sensorInput[-1]
 
     print(f"Distance to the nearest vehicle {round(minDistance)}")
 

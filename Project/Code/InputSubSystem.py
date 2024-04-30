@@ -7,9 +7,9 @@ from pymata4 import pymata4
 import time
 import ServicesSubSystem as service
 
-trigPin = 3
-echoPin = 6
-button = 5
+trigPin = 5
+echoPin = 3
+button = 4
 board = service.board
 
 ultra_sonic_distance_input = []

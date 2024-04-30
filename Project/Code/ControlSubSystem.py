@@ -51,6 +51,8 @@ def control_sub_system(mode):
 
         except KeyboardInterrupt:
             print("")
+            for i in range(1,7):
+                output.turn_off_sequnce(i)
             print("Polling loop terminated")
 
     elif mode == 2:
@@ -349,8 +351,8 @@ def poll_Sensors():
 
     global sensorInput 
     global buttonInput
-    sensorInput.append(input.input_sub_system(1)) 
-    buttonInput.append(input.input_sub_system(2))
+    sensorInput.append(input.input_sub_system(2)) 
+    buttonInput.append(input.input_sub_system(1))    
 
 
 
@@ -363,7 +365,8 @@ def print_nearest_distance():
     global sensorInput
 
     minDistance = min(sensorInput)
-    print(f"Distance to the nearest vehicle {round(minDistance,2)}")
+
+    print(f"Distance to the nearest vehicle {round(minDistance)}")
 
 
 

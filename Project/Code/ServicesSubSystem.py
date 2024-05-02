@@ -13,7 +13,7 @@ except:
 import ControlSubSystem as control
 import time
 
-# Iniitalization of system variables
+# Initialization of system variables
 passwordFile = "/Users/varonrasiah/Documents/Moansh/ENG1013/Project/Code/password.txt"
 userPin = 1234
 pollingFrequency = 1
@@ -45,7 +45,7 @@ lookupDictionary = {
 def servies_sub_system():
 
     """
-        The function that hold the main functionality of the servies subsystem
+        The function that hold the main functionality of the services subsystem
         No parameters are taken in.
         Contains the main menu
         
@@ -67,7 +67,7 @@ def servies_sub_system():
             except ValueError:
                 print("Enter a valid input of 1,2 or 3")
             except KeyboardInterrupt:
-                print("\nKeyboard interupt not allowed enter 4 in the main menu to exit program functionlaity")
+                print("\nKeyboard interrupt not allowed enter 4 in the main menu to exit program functionality")
                 pass
         
         if mode == 1:
@@ -76,62 +76,71 @@ def servies_sub_system():
             control.control_sub_system(mode)
         elif mode == 3:
 
-            passwordTries = 0 
-            while passwordTries < 3:
-                while True:
-                    try:
-                        userEnteredPasscode = int(str(input("Enter pin to access admin fucntionality --> ")))  #validate the pin
-                        break
-                    except ValueError:
-                        print("please enter a set of digits and not letters or any other symbols")
-                display(str(userEnteredPasscode))
-                passwordTries += 1
-                pinCondition = authenticate(userEnteredPasscode)
-                if pinCondition == True:
-                    display("ACCG")
-                    break
-                else:
-                    display("Err")
-                    print(f"Incorrect pin entered please try again; Tries remaining = {3-passwordTries}")
-
-            if pinCondition == True:
-                print("Access to system variables granted.")
-                while True:
-                    try:
-                        print_system_variable_edit_menu()
-                        systemVarChangeSelection = int(str(input("Enter which system variable that needes to be changed -->")))
-                        break
-                    except ValueError:
-                        print("please enter a selection of either 1 for pin or 2 for the polling frequency -->")
-                if systemVarChangeSelection == 1:
+            try:
+                passwordTries = 0
+                while passwordTries < 3:
                     while True:
                         try:
-                            newPin = int(str(input("Enter new pin of 4 digits--> ")))  
-                            if len(str(newPin)) == 4:
-                                display(str(newPin))
-                                break
-                            else:
-                                display("Err")
-                                print("Pin requires 4 digits. Please try again.")
-                        except ValueError:
-                            display("Err")
-                            print("please enter a set of digits and not letters or any other symbols")
-                    display("5UC5")
-                    userPin = newPin
-                elif systemVarChangeSelection == 2:
-                    while True:
-                        try:
-                            newPollingFreq = int(str(input("Enter new polling frequency --> "))) 
+                            userEnteredPasscode = int(str(input("Enter pin to access admin functionality --> ")))  #validate the pin
                             break
                         except ValueError:
-                            display("Err")
-                            print("Please enter a set of digits and not letters or any other symbols")
-                    pollingFrequency = newPollingFreq
-                elif systemVarChangeSelection == 3:
-                    pass
-            else:
-                print("Incorrect pin! exiting program.")
-                break
+                            print("please enter a set of digits and not letters or any other symbols")
+                    display(str(userEnteredPasscode))
+                    passwordTries += 1
+                    pinCondition = authenticate(userEnteredPasscode)
+                    if pinCondition == True:
+                        display("ACCG")
+                        break
+                    else:
+                        display("Err")
+                        print(f"Incorrect pin entered please try again; Tries remaining = {3-passwordTries}")
+
+                if pinCondition == True:
+                    print("Access to system variables granted.")
+                    while True:
+                        try:
+                            print_system_variable_edit_menu()
+                            systemVarChangeSelection = int(str(input("Enter which system variable that needes to be changed -->")))
+                            break
+                        except ValueError:
+                            print("please enter a selection of either 1 for pin or 2 for the polling frequency -->")
+                        except KeyboardInterrupt:
+                            print("Exited to main program functionality")
+                    if systemVarChangeSelection == 1:
+                        while True:
+                            try:
+                                newPin = int(str(input("Enter new pin of 4 digits--> ")))
+                                if len(str(newPin)) == 4:
+                                    display(str(newPin))
+                                    break
+                                else:
+                                    display("Err")
+                                    print("Pin requires 4 digits. Please try again.")
+                            except ValueError:
+                                display("Err")
+                                print("please enter a set of digits and not letters or any other symbols")
+                            except KeyboardInterrupt:
+                                print("Exited to main program functionality")
+                        display("5UC5")
+                        userPin = newPin
+                    elif systemVarChangeSelection == 2:
+                        while True:
+                            try:
+                                newPollingFreq = int(str(input("Enter new polling frequency --> ")))
+                                break
+                            except ValueError:
+                                display("Err")
+                                print("Please enter a set of digits and not letters or any other symbols")
+                            except KeyboardInterrupt:
+                                print("Exited to main program functionality")
+                        pollingFrequency = newPollingFreq
+                    elif systemVarChangeSelection == 3:
+                        pass
+                else:
+                    print("Incorrect pin! exiting program.")
+                    break
+            except KeyboardInterrupt:
+               print("\n Exited maintenance and adjustment mode.")
         elif mode == 4:
             password_Persistence(userPin)
             print("Shutting down-board")
@@ -165,7 +174,7 @@ def trigger_pins(binaryString = None,mode = 1):  #mode 1 for normal operation, m
 def segment_selection(digitNum):
     """
         This function is used to preset the segment at which the number is to be displayed based on the requirement.
-        Parameters : digitNum(int) corresponds to the relevant digitspot that needs to be enabled
+        Parameters : digitNum(int) corresponds to the relevant digit spot that needs to be enabled
     """
     D1 = 9
     D2 = 10
@@ -195,8 +204,8 @@ def segment_selection(digitNum):
 def display(displayString):
 
     """
-        Function is used to display needed element on the seven segement display
-        1 prameter named pin is taken in, This usually holds the user pin
+        Function is used to display needed element on the seven segment display
+        1 parameter named pin is taken in, This usually holds the user pin
     
     """
     initialize_display_pins()
@@ -297,7 +306,7 @@ def password_Persistence(pin):
         f.write(str(pin))
         f.close()
     except:
-        print("some error has occured during the file write operation in trying to persist the user pass code.")
+        print("some error has occurred during the file write operation in trying to persist the user pass code.")
 
 
 def print_welcome_screen():
@@ -316,7 +325,7 @@ def print_welcome_screen():
     print()
     print("       1 : For Normal Operation Mode")
     print("       2 : For Data Observation Mode")
-    print("       3 : Maintenence and Adjustment Mode")
+    print("       3 : Maintenance and Adjustment Mode")
     print("       4 : Terminate program")
     print()
     print("================================================================================")
@@ -343,7 +352,7 @@ def print_system_variable_edit_menu():
     print()
     print("       Enter 1 : To change the user pin")
     print("       Enter 2 : To change Polling Rate")
-    print("       Enter 3 : To naviagte to the main menu")
+    print("       Enter 3 : To navigate to the main menu")
     print()
     print("================================================================================")
     print("================================================================================")
@@ -352,7 +361,7 @@ def print_system_variable_edit_menu():
 def initialize_display_pins():
 
     """
-        Function initialises pin numbers and specifes the function of each pin and populates the global pin array
+        Function initialises pin numbers and specifies the function of each pin and populates the global pin array
     """
     global pins
 

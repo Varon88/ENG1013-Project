@@ -21,7 +21,7 @@ def control_sub_system(mode):
     global sensorInput
     global buttonInput
     """
-        Function houses the main functionality of the control subsytem
+        Function houses the main functionality of the control subsystem
         Takes in a parameter named mode that houses the mode.
     """
 
@@ -104,7 +104,7 @@ def light_sequence(startStage):
             output.output_sub_system(startStage)
             if (round(get_current_time() - stageOneStartTime))% service.pollingFrequency == 0:
                 poll_Sensors()
-                print(f"Time after which sensors are polled after the start of stage 1 : {get_current_time() - stageOneStartTime}\n")
+                print(f"Time after which sensors are polled after the start of stage 1 : {round(get_current_time() - stageOneStartTime,1)}\n")
             if (round(get_current_time() - stageOneStartTime))% 2 == 0:
                 print_nearest_distance()
             timeDiffrerence = get_current_time() - initialTime
@@ -117,7 +117,7 @@ def light_sequence(startStage):
             output.output_sub_system(startStage+1)
             if (round(get_current_time() - stageOneStartTime))% service.pollingFrequency == 0:
                 poll_Sensors()
-                print(f"Time after which sensors are polled after the start of stage 1 : {get_current_time() - stageOneStartTime}\n")
+                print(f"Time after which sensors are polled after the start of stage 1 : {round(get_current_time() - stageOneStartTime,1)}\n")
             if (round(get_current_time() - stageOneStartTime))% 2 == 0:
                 print_nearest_distance()
             timeDifference2 = get_current_time() - initialTime2
@@ -132,7 +132,7 @@ def light_sequence(startStage):
             output.output_sub_system(startStage+2)
             if (round(get_current_time() - stageOneStartTime))% service.pollingFrequency == 0:
                 poll_Sensors()
-                print(f"Time after which sensors are polled after the start of stage 1 : {get_current_time() - stageOneStartTime}\n")
+                print(f"Time after which sensors are polled after the start of stage 1 : {round(get_current_time() - stageOneStartTime,1)}\n")
             if (round(get_current_time() - stageOneStartTime))% 2 == 0:
                 print_nearest_distance()
             timeDifference3 = get_current_time() - initialTime3
@@ -149,7 +149,7 @@ def light_sequence(startStage):
             output.output_sub_system(startStage)
             if (round(get_current_time() - stageFourStartTime))% service.pollingFrequency == 0:
                 poll_Sensors()
-                print(f"Time after which sensors are polled after the start of stage 3 : {get_current_time() - stageFourStartTime}\n")
+                print(f"Time after which sensors are polled after the start of stage 3 : {round(get_current_time() - stageFourStartTime,1)}\n")
             if (round(get_current_time() - stageFourStartTime))% 2 == 0:
                 print_nearest_distance()
             timeDiffrerence = get_current_time() - initialTime
@@ -162,7 +162,7 @@ def light_sequence(startStage):
             output.output_sub_system(startStage+1)
             if (round(get_current_time() - stageFourStartTime))% service.pollingFrequency == 0:
                 poll_Sensors()
-                print(f"Time after which sensors are polled after the start of stage 3 : {get_current_time() - stageFourStartTime}\n")
+                print(f"Time after which sensors are polled after the start of stage 3 : {round(get_current_time() - stageFourStartTime,1)}\n")
             if (round(get_current_time() - stageFourStartTime))% 2 == 0:
                 print_nearest_distance()
             timeDifference2 = get_current_time() - initialTime2
@@ -175,7 +175,7 @@ def light_sequence(startStage):
             output.output_sub_system(startStage+2)
             if (round(get_current_time() - stageFourStartTime))% service.pollingFrequency == 0:
                 poll_Sensors()
-                print(f"Time after which sensors are polled after the start of stage 1 : {get_current_time() - stageFourStartTime}\n")
+                print(f"Time after which sensors are polled after the start of stage 1 : {round(get_current_time() - stageFourStartTime,1)}\n")
             if (round(get_current_time() - stageFourStartTime))% 2 == 0:
                 print_nearest_distance()
             timeDifference3 = get_current_time() - initialTime3
@@ -192,7 +192,7 @@ def light_sequence(startStage):
             output.output_sub_system(startStage+1)
             if (round(get_current_time() - stageZeroStartTime))% service.pollingFrequency == 0:
                 poll_Sensors()
-                print(f"Time after which sensors are polled after the start of stage 1 : {get_current_time() - stageZeroStartTime}\n")
+                print(f"Time after which sensors are polled after the start of stage 1 : {round(get_current_time() - stageZeroStartTime,1)}\n")
             if (round(get_current_time() - stageZeroStartTime))% 2 == 0:
                 print_nearest_distance()
             timeDiffrerence = get_current_time() - initialTime
@@ -205,7 +205,7 @@ def light_sequence(startStage):
             output.output_sub_system(startStage+2)
             if (round(get_current_time() - stageZeroStartTime))% service.pollingFrequency == 0:
                 poll_Sensors()
-                print(f"Time after which sensors are polled after the start of stage 1 : {get_current_time() - stageZeroStartTime}\n")
+                print(f"Time after which sensors are polled after the start of stage 1 : {round(get_current_time() - stageZeroStartTime,1)}\n")
             if (round(get_current_time() - stageZeroStartTime))% 2 == 0:
                 print_nearest_distance()
             timeDifference2 = get_current_time() - initialTime2
@@ -218,7 +218,7 @@ def light_sequence(startStage):
             output.output_sub_system(startStage+3)
             if (round(get_current_time() - stageZeroStartTime))% service.pollingFrequency == 0:
                 poll_Sensors()
-                print(f"Time after which sensors are polled after the start of stage 1 : {get_current_time() - stageZeroStartTime}\n")
+                print(f"Time after which sensors are polled after the start of stage 1 : {round(get_current_time() - stageZeroStartTime,1)}\n")
             if (round(get_current_time() - stageZeroStartTime))% 2 == 0:
                 print_nearest_distance()
             timeDifference3 = get_current_time() - initialTime3
@@ -366,7 +366,7 @@ def print_nearest_distance():
 
     minDistance = sensorInput[-1]
 
-    print(f"Distance to the nearest vehicle {round(minDistance)}")
+    print(f"Distance to the nearest vehicle {round(minDistance,2)}")
 
 
 
@@ -376,4 +376,4 @@ def total_number_presses():
     """
     global buttonInput
 
-    print(f"Number of button presses : {buttonInput.count(1)}")
+    print(f"Number of button presses : {buttonInput.count(0)}")

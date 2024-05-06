@@ -74,6 +74,8 @@ def control_sub_system(mode):
                 plt.ylabel("Distances in cm")
                 plt.draw()
 
+                generate_averge_rate_of_change(distancesLast20Seconds,timeLast20Seconds)
+
             else:
                 print("Insufficient data to generate graphs.")
                 service.display("Err")
@@ -377,3 +379,12 @@ def total_number_presses():
     global buttonInput
 
     print(f"Number of button presses : {buttonInput.count(0)}")
+
+
+def generate_averge_rate_of_change(distance,time):
+    velocityList = []
+    for i in range(len(time)):
+        velocityList.append(distance(i)/time(i))
+
+    averageVelocity = sum(velocityList)/len(velocityList)
+    print(f"Average velocity over the last 20 seconds is {round(averageVelocity,2)} ms^-1")

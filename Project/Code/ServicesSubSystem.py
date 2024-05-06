@@ -137,7 +137,8 @@ def servies_sub_system():
                     elif systemVarChangeSelection == 3:
                         pass
                 else:
-                    print("Incorrect pin! exiting program.")
+                    print("Incorrect pin entered multiple times! System Locked out.")
+                    system_lockout()
                     break
             except KeyboardInterrupt:
                print("\n Exited maintenance and adjustment mode.")
@@ -390,5 +391,16 @@ def initialize_display_pins():
     board.set_pin_mode_digital_output(D2)
     board.set_pin_mode_digital_output(D3)
     board.set_pin_mode_digital_output(D4)
+
+
+
+def system_lockout():
+    lockoutTime = 2*60
+    startTime = time.time()
+    timeDifference = 0
+    while timeDifference < lockoutTime:
+        currentTime = time.time()
+        timeRemaining = lockoutTime - (currentTime - startTime)
+        print(f"Lockout Reset in {timeRemaining} seonds")
 
 

@@ -17,6 +17,7 @@ import time
 passwordFile = "/Users/varonrasiah/Documents/Moansh/ENG1013/Project/Code/password.txt"
 userPin = 1234
 pollingFrequency = 1
+maintenanceTimeout = 30
 pins = []
 
 lookupDictionary = {
@@ -78,8 +79,17 @@ def servies_sub_system():
 
             try:
                 passwordTries = 0
+                startTime = time.time()
                 while passwordTries < 3:
+                    timeoutCondition = check_timeout(startTime)
+                    if timeoutCondition:
+                        timeout_message()
+                        break
                     while True:
+                        timeoutCondition = check_timeout(startTime)
+                        if timeoutCondition:
+                            timeout_message()
+                            break
                         try:
                             userEnteredPasscode = int(str(input("Enter pin to access admin functionality --> ")))  #validate the pin
                             break
@@ -88,58 +98,116 @@ def servies_sub_system():
                     display(str(userEnteredPasscode))
                     passwordTries += 1
                     pinCondition = authenticate(userEnteredPasscode)
+                    timeoutCondition = check_timeout(startTime)
+                    if timeoutCondition:
+                        timeout_message()
+                        break
                     if pinCondition == True:
                         display("ACCG")
                         break
                     else:
                         display("Err")
                         print(f"Incorrect pin entered please try again; Tries remaining = {3-passwordTries}")
+                timeoutCondition = check_timeout(startTime)
+                if timeoutCondition:
+                    timeout_message()
+                    continue
 
                 if pinCondition == True:
                     print("Access to system variables granted.")
+                    timeoutCondition = check_timeout(startTime)
+                    if timeoutCondition:
+                        timeout_message()
+                        continue
+
                     while True:
-                        try:
-                            print_system_variable_edit_menu()
-                            systemVarChangeSelection = int(str(input("Enter which system variable that needes to be changed -->")))
-                            break
-                        except ValueError:
-                            print("please enter a selection of either 1 for pin or 2 for the polling frequency -->")
-                        except KeyboardInterrupt:
-                            print("Exited to main program functionality")
-                    if systemVarChangeSelection == 1:
                         while True:
+                            timeoutCondition = check_timeout(startTime)
+                            if timeoutCondition:
+                                timeout_message()
+                                break
                             try:
-                                newPin = int(str(input("Enter new pin of 4 digits--> ")))
-                                if len(str(newPin)) == 4:
-                                    display(str(newPin))
-                                    break
-                                else:
-                                    display("Err")
-                                    print("Pin requires 4 digits. Please try again.")
-                            except ValueError:
-                                display("Err")
-                                print("please enter a set of digits and not letters or any other symbols")
-                            except KeyboardInterrupt:
-                                print("Exited to main program functionality")
-                        display("5UC5")
-                        userPin = newPin
-                    elif systemVarChangeSelection == 2:
-                        while True:
-                            try:
-                                newPollingFreq = int(str(input("Enter new polling frequency --> ")))
+                                print_system_variable_edit_menu()
+                                systemVarChangeSelection = int(str(input("Enter which system variable that needes to be changed -->")))
                                 break
                             except ValueError:
-                                display("Err")
-                                print("Please enter a set of digits and not letters or any other symbols")
+                                print("please enter a selection of either 1 for pin or 2 for the polling frequency -->")
                             except KeyboardInterrupt:
                                 print("Exited to main program functionality")
-                        pollingFrequency = newPollingFreq
-                    elif systemVarChangeSelection == 3:
-                        pass
+                        timeoutCondition = check_timeout(startTime)
+                        if timeoutCondition:
+                            timeout_message()
+                            break
+
+                        if systemVarChangeSelection == 1:
+                            timeoutCondition = check_timeout(startTime)
+                            if timeoutCondition:
+                                timeout_message()
+                                break
+                            while True:
+                                timeoutCondition = check_timeout(startTime)
+                                if timeoutCondition:
+                                    timeout_message()
+                                    break
+                                try:
+                                    newPin = int(str(input("Enter new pin of 4 digits--> ")))
+                                    if len(str(newPin)) == 4:
+                                        display(str(newPin))
+                                        break
+                                    else:
+                                        display("Err")
+                                        print("Pin requires 4 digits. Please try again.")
+                                except ValueError:
+                                    display("Err")
+                                    print("please enter a set of digits and not letters or any other symbols")
+                                except KeyboardInterrupt:
+                                    interruptCondition = True
+                                    break
+                            timeoutCondition = check_timeout(startTime)
+                            if timeoutCondition:
+                                timeout_message()
+                                break
+                            if not interruptCondition:
+                                display("5UC5")
+                                userPin = newPin
+                            else:
+                                continue
+
+                        elif systemVarChangeSelection == 2:
+                            timeoutCondition = check_timeout(startTime)
+                            if timeoutCondition:
+                                timeout_message()
+                                break
+                            while True:
+                                timeoutCondition = check_timeout(startTime)
+                                if timeoutCondition:
+                                    timeout_message()
+                                    break
+                                try:
+                                    newPollingFreq = int(str(input("Enter new polling frequency --> ")))
+                                    break
+                                except ValueError:
+                                    display("Err")
+                                    print("Please enter a set of digits and not letters or any other symbols")
+                                except KeyboardInterrupt:
+                                    interruptCondition = True
+                                    break
+                            timeoutCondition = check_timeout(startTime)
+                            if timeoutCondition:
+                                timeout_message()
+                                break
+                            if not interruptCondition:
+                                pollingFrequency = newPollingFreq
+                            else:
+                                continue
+
+                        elif systemVarChangeSelection == 3:
+                            break
+                        interruptCondition = False
                 else:
                     print("Incorrect pin entered multiple times! System Locked out.")
                     system_lockout()
-                    break
+                    continue
             except KeyboardInterrupt:
                print("\n Exited maintenance and adjustment mode.")
         elif mode == 4:
@@ -395,12 +463,23 @@ def initialize_display_pins():
 
 
 def system_lockout():
-    lockoutTime = 2*60
+    lockoutTime = 20
     startTime = time.time()
     timeDifference = 0
+    print(f"System has been locked out for {lockoutTime} seconds, system will reset to regular functionality after this time.")
     while timeDifference < lockoutTime:
         currentTime = time.time()
-        timeRemaining = lockoutTime - (currentTime - startTime)
-        print(f"Lockout Reset in {timeRemaining} seonds")
+        timeDifference = (currentTime - startTime)
 
 
+
+def check_timeout(startTime):
+    currentTime = time.time()
+    if (currentTime - startTime) >= maintenanceTimeout:
+        return True
+    else:
+        return False
+
+
+def timeout_message():
+    print("\nSession has timed out.")

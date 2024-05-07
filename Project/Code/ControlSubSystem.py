@@ -347,7 +347,7 @@ def light_sequence_test(startStage):
 def poll_Sensors():
 
     """
-        Function thats polls the sensor and updates the lists.
+        Function that's polls the sensor and updates the lists.
         No parameters taken in
     """
 

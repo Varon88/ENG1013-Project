@@ -185,6 +185,9 @@ def servies_sub_system():
                                     break
                                 try:
                                     newPollingFreq = int(str(input("Enter new polling frequency --> ")))
+                                    if newPollingFreq > 5:
+                                        print("Invalid polling frequency entered please enter a frequency below 5.")
+                                        continue
                                     break
                                 except ValueError:
                                     display("Err")

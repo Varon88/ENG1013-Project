@@ -6,7 +6,7 @@
 
 
 import time as time
-import InputSubSystem as input 
+import InputSubSystem as inputSub
 import OutputSubSystem as output
 import ServicesSubSystem as service
 import matplotlib.pyplot as plt
@@ -15,11 +15,13 @@ import matplotlib.pyplot as plt
 
 sensorInput = []
 buttonInput = []
+temps = []
 
 def control_sub_system(mode):
     
     global sensorInput
     global buttonInput
+    global temps
     """
         Function houses the main functionality of the control subsystem
         Takes in a parameter named mode that houses the mode.
@@ -58,27 +60,86 @@ def control_sub_system(mode):
     elif mode == 2:
 
         try:
-            print("Data Observation mode")
-            if len(input.ultra_sonic_distance_input) >= round(20/service.pollingFrequency):
-                distance = input.ultra_sonic_distance_input
-                correspondingTime = input.ultra_sonic_time_input
-                elementCount = round(20/service.pollingFrequency)
-                distancesLast20Seconds = distance[-elementCount:]
-                timeLast20Seconds = correspondingTime[-elementCount:]
-                plt.ion()
-                plt.gca().cla()
-                plt.plot(timeLast20Seconds,distancesLast20Seconds)
-                plt.legend("Last 20 seconds")
-                plt.title("Distance against Time (last 20 seconds)")
-                plt.xlabel("Time is seconds")
-                plt.ylabel("Distances in cm")
-                plt.draw()
+            while True:
+                while True:
+                    data_observation_mode_menu()
+                    try:
+                        selection = int(input("Enter selected data viewing mode --> "))
+                        break
+                    except ValueError:
+                        print("Enter the numbers specified in the menu")
+                    except KeyboardInterrupt:
+                        print("Enter 4 to exit data observation mode")
 
-                generate_averge_rate_of_change(distancesLast20Seconds,timeLast20Seconds)
+                if selection == 1:
+                    if len(inputSub.ultra_sonic_distance_input) >= round(20 / service.pollingFrequency):
+                        distance = inputSub.ultra_sonic_distance_input
+                        correspondingTime = inputSub.ultra_sonic_time_input
+                        elementCount = round(20/service.pollingFrequency)
+                        distancesLast20Seconds = distance[-elementCount:]
+                        timeLast20Seconds = correspondingTime[-elementCount:]
+                        formated_last20Seconds = format_times(timeLast20Seconds)
+                        plt.ion()
+                        plt.gca().cla()
+                        plt.plot(formated_last20Seconds, distancesLast20Seconds)
+                        plt.legend("Last 20 seconds")
+                        plt.title("Distance against Time (last 20 seconds)")
+                        plt.xlabel("Time is seconds")
+                        plt.ylabel("Distances in cm")
+                        plt.draw()
+                        plt.savefig("/Users/varonrasiah/Documents/Moansh/ENG1013-Project/Project/plots/disp_plot.png")
+                        plt.pause(0.001)
 
-            else:
-                print("Insufficient data to generate graphs.")
-                service.display("Err")
+                        generate_averge_rate_of_change(distancesLast20Seconds, timeLast20Seconds)
+
+                    else:
+                        print("Insufficient data to generate graphs.")
+                        service.display("Err")
+
+                elif selection == 3:
+                    if len(inputSub.temperature_readings) != 0:
+                        temperature = inputSub.temperature_readings
+                        times = format_times(inputSub.temp_time_readings)
+                        plt.ion()
+                        plt.gca().cla()
+                        plt.plot(times, temperature)
+                        plt.legend("Last run Normal operation")
+                        plt.title("Temperature against Time ")
+                        plt.xlabel("Time is seconds")
+                        plt.ylabel("Temperature in celsius")
+                        plt.draw()
+                        plt.savefig("/Users/varonrasiah/Documents/Moansh/ENG1013-Project/Project/plots/temp_plot.png")
+                        plt.pause(0.001)
+
+                    else:
+                        print("Insufficient data to generate graphs.")
+                        service.display("Err")
+
+                elif selection == 2:
+                    if len(inputSub.ultra_sonic_distance_input) >= round(20 / service.pollingFrequency):
+                        distance = inputSub.ultra_sonic_distance_input
+                        correspondingTime = inputSub.ultra_sonic_time_input
+                        elementCount = round(20/service.pollingFrequency)
+                        distancesLast20Seconds = distance[-elementCount:]
+                        timeLast20Seconds = correspondingTime[-elementCount:]
+                        formated_last20Seconds = format_times(timeLast20Seconds)
+                        velocityLast20Seconds = generate_averge_rate_of_change(distancesLast20Seconds, timeLast20Seconds, 2)
+                        plt.ion()
+                        plt.gca().cla()
+                        plt.plot(formated_last20Seconds, velocityLast20Seconds)
+                        plt.legend("Last 20 seconds")
+                        plt.title("Velocity against Time (last 20 seconds)")
+                        plt.xlabel("Time is seconds")
+                        plt.ylabel("Velocity in cm/s")
+                        plt.draw()
+                        plt.savefig("/Users/varonrasiah/Documents/Moansh/ENG1013-Project/Project/plots/velocity_plot.png")
+                        plt.pause(0.001)
+                    else:
+                        print("Insufficient data to generate graphs.")
+                        service.display("Err")
+
+                elif selection == 4:
+                    break
         
         except KeyboardInterrupt:
             print("")
@@ -353,8 +414,11 @@ def poll_Sensors():
 
     global sensorInput 
     global buttonInput
-    sensorInput.append(input.input_sub_system(2)) 
-    buttonInput.append(input.input_sub_system(1))    
+    global temps
+    sensorInput.append(inputSub.input_sub_system(2))
+    buttonInput.append(inputSub.input_sub_system(1))
+    temps.append(inputSub.input_sub_system(3))
+
 
 
 
@@ -381,10 +445,55 @@ def total_number_presses():
     print(f"Number of button presses : {buttonInput.count(0)}")
 
 
-def generate_averge_rate_of_change(distance,time):
+def generate_averge_rate_of_change(distance,time,mode = 1):
     velocityList = []
     for i in range(len(time)):
         velocityList.append(distance(i)/time(i))
 
-    averageVelocity = sum(velocityList)/len(velocityList)
-    print(f"Average velocity over the last 20 seconds is {round(averageVelocity,2)} ms^-1")
+    if mode == 1:
+        averageVelocity = sum(velocityList)/len(velocityList)
+        print(f"Average velocity over the last 20 seconds is {round(averageVelocity,2)} ms^-1")
+    elif mode == 2:
+        return velocityList
+
+
+def data_observation_mode_menu():
+
+    """
+        Function that prints in the formatted data_observation menu
+        No parameters taken in
+    """
+
+    print()
+    print("================================================================================")
+    print("=========================== Data_Observation_Mode ==============================")
+    print("================================================================================")
+    print()
+    print("Modes Available --> ")
+    print()
+    print("       1 : Distance against Time for the last 20 seconds of the polling loop")
+    print("       2 : Velocity against Time for the last 20 seconds of the polling loop")
+    print("       3 : Temperature against time throughout the whole run")
+    print("       4 : Exit data observation mode")
+    print()
+    print("================================================================================")
+    print("================================================================================")
+
+
+def format_times(time):
+    formattedTime = [0]
+    for i in range(1, len(time)):
+        timeDiff = time[i]-time[0]
+        formattedTime.append(timeDiff)
+
+    return formattedTime
+
+
+
+
+
+
+
+
+
+

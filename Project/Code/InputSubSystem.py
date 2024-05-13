@@ -8,24 +8,31 @@ import time
 import ServicesSubSystem as service
 import math
 
-trigPin = 5
-echoPin = 3
+# Pins
+trigPin1 = 5
+echoPin1 = 3
+trigPin2 = 10
+echoPin2 = 11
 button = 4
 thermistorA = 0
 
-steinHartA = 1.1235*(10**-3)
-steinHartB = 2.3500*(10**-4)
-steinHartC = 8.4538*(10**-8)
-circuitR1 = 9900
-supplyVoltage = 1023.00
+# Necessary Constants
+steinHartA = service.steinHartA
+steinHartB = service.steinHartB
+steinHartC = service.steinHartC
+circuitR1 = service.circuitR1
+supplyVoltage = service.supplyVoltage
+ultraSonic2Height = service.ultraSonic2Height
 
 board = service.board
 
+# Persisting input data in the subsystem for other usages with relevant time when required. eg graphing
 ultra_sonic_distance_input = []
-ultra_sonic_time_input = [] #Persisting input data in the subsystem for other usages with relevant time when required. eg graphing
+ultra_sonic_time_input = []
 push_button_input = []
 temperature_readings = []
 temp_time_readings = []
+ultra_sonic_height = []
 
 def input_sub_system(type):
 
@@ -40,7 +47,9 @@ def input_sub_system(type):
     global temp_time_readings
     global board
     
-    if type == 1:
+    if type == 1: # Button Presses
+
+        #TODO: Covert this into a analog input
         board.set_pin_mode_digital_input(button)
         time.sleep(0.025)
 
@@ -49,18 +58,19 @@ def input_sub_system(type):
         push_button_input.append(buttonData)
         return buttonPress
     
-    elif type == 2:
+    elif type == 2: # UltraSonic main
 
-        board.set_pin_mode_sonar(trigPin,echoPin, timeout=200000)
-        time.sleep(2)
+        board.set_pin_mode_sonar(trigPin1, echoPin1, timeout=200000)
+        time.sleep(0.5)
 
-        data = board.sonar_read(trigPin)
+        data = board.sonar_read(trigPin1)
         ultra_sonic_distance_input.append(data[0])
         ultra_sonic_time_input.append(data[1])
         distance = data[0]
         return distance
 
-    elif type == 3:
+    elif type == 3: # Temperature
+
         board.set_pin_mode_analog_input(thermistorA)
         rawReading = board.analog_read(thermistorA)
         voltage = rawReading[0]
@@ -76,6 +86,18 @@ def input_sub_system(type):
         temperature_readings.append(tempC)
         temp_time_readings.append(time_read)
         return tempC
+
+    elif type == 4:
+
+        board.set_pin_mode_sonar(trigPin2, echoPin2, timeout=200000)
+        time.sleep(0.5)
+
+        data = board.sonar_read(trigPin2)
+        heightReturned = data[0]
+        actualHeight = ultraSonic2Height - heightReturned
+        ultra_sonic_height.append(actualHeight)
+        return actualHeight
+
 
 
 

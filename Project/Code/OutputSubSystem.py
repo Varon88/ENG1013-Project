@@ -1,4 +1,4 @@
-# Function that handles all the outputs necessary system wide. Mainly handles the sequential lightings
+# Function that handles all the outputs necessary system-wide. Mainly handles the sequential lightnings
 # ENG-1013 - Project - A21
 # Created By : Varon Nethan Rasiah 
 # Created Date: 22/03/2024
@@ -7,118 +7,70 @@ import ServicesSubSystem as service
 
 board = service.board
 
-MR = 13
-MY = 12
-MG = 11
+ser = 2
+rclk = 3
+srclk = 4
 
-SR = 10 
-SY = 9 
-SG = 8 
-
-PR = 7 
-PG = 6
+stages = {
+    "0": "00000000",
+    "1": "00110010",
+    "2": "01010010",
+    "3": "10010010",
+    "4": "10000101",
+    "5": "10001001",
+    "6": "10010010"
+}
 
 
 def output_sub_system(startStage):
-
     """
-        Function thats controls the outputs as a whole. This also includes the light sequenences.
-        A single parameter is taken in named startStage that takes in what stage of the light sequnce needs to be output
+        Function that's controls the outputs as a whole. This also includes the light sequences.
+        A single parameter is taken in named startStage that takes in what stage of the light sequence needs to be output
     """
 
     global board
     initialize_board()
-
-    if startStage == 1:
-        # print lights for stage 1 and follow for all.
-        board.digital_write(MG,1)
-        board.digital_write(SR,1)
-        board.digital_write(PR,1)        
-
-    elif startStage == 2:
-        board.digital_write(MY,1)
-        board.digital_write(SR,1)
-        board.digital_write(PR,1)
-    
-    elif startStage == 3:
-        board.digital_write(MR,1)
-        board.digital_write(SR,1)
-        board.digital_write(PR,1)
-    
-    elif startStage == 4:
-        board.digital_write(MR,1)
-        board.digital_write(SG,1)
-        board.digital_write(PG,1)
-
-    elif startStage == 5:
-        board.digital_write(MR,1)
-        board.digital_write(SY,1)
-        board.digital_write(PG,1)
-    
-    elif startStage == 6:
-        board.digital_write(MR,1)
-        board.digital_write(SR,1)
-        board.digital_write(PR,1)
+    reset_shift()
+    sequence = stages[str(startStage)]
+    write_to_shift(sequence)
 
 
-
-
-def turn_off_sequnce(stage):
+def write_to_shift(bit):
     """
-        This function can be used to turn off relevant light stages 
-        Parameters: startStage(int) - holds the start stage
+        inverts bits taken in as a parameter and registers the data in the shift register for execution
+        parameters : bit(string)
     """
-    global board
-    initialize_board()
 
-    if stage == 1:
-        board.digital_write(MG,0)
-        board.digital_write(SR,0)
-        board.digital_write(PR,0)
-            
+    invert_bit = bit[::-1]
+    for i in invert_bit:
+        if i == '0':
+            board.digital_pin_write(ser, 0)
+            board.digital_pin_write(srclk, 1)
+            board.digital_pin_write(srclk, 0)
+        if i == '1':
+            board.digital_pin_write(ser, 1)
+            board.digital_pin_write(srclk, 1)
+            board.digital_pin_write(srclk, 0)
+    board.digital_pin_write(rclk, 1)
+    board.digital_pin_write(rclk, 0)
 
-    elif stage == 2:
-        board.digital_write(MY,0)
-        board.digital_write(SR,0)
-        board.digital_write(PR,0)   
-    
-    elif stage == 3:
-        board.digital_write(MR,0)
-        board.digital_write(SR,0)
-        board.digital_write(PR,0)
-    
-    elif stage == 4:
-        board.digital_write(MR,0)
-        board.digital_write(SG,0)
-        board.digital_write(PG,0) 
 
-    elif stage == 5:
-        board.digital_write(MR,0)
-        board.digital_write(SY,0)
-        board.digital_write(PG,0)
-    
-    elif stage == 6:
-        board.digital_write(MR,0)
-        board.digital_write(SR,0)
-        board.digital_write(PR,0)
+def reset_shift():
+    """
+        Resets the bits stored in the shift register
+        Parameters : None
+    """
+    board.digital_pin_write(rclk, 1)
+    board.digital_pin_write(rclk, 0)
+
 
 def initialize_board():
     """
-        This function is used to initialize the board and the relevant pins necessary for the light sequnce
+        This function is used to initialize the board and the relevant pins necessary for the light sequence
         Parameters: None
     """
-    global MR,MY,MG,SR,SY,SG,PR,PG
+    global ser, rclk, srclk
+    board.set_pin_mode_digital_output(ser)
+    board.set_pin_mode_digital_output(rclk)
+    board.set_pin_mode_digital_output(srclk)
 
-
-    board.set_pin_mode_digital_output(MR)
-    board.set_pin_mode_digital_output(MY)
-    board.set_pin_mode_digital_output(MG)
-    board.set_pin_mode_digital_output(SR)
-    board.set_pin_mode_digital_output(SY)
-    board.set_pin_mode_digital_output(SG)
-    board.set_pin_mode_digital_output(PR)
-    board.set_pin_mode_digital_output(PG)
-
-
-
-    

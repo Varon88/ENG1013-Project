@@ -68,7 +68,7 @@ def input_sub_system(type):
     elif type == 2: # UltraSonic main
 
         board.set_pin_mode_sonar(trigPin1, echoPin1, timeout=200000)
-        time.sleep(0.5)
+        time.sleep(0.25)
 
         data = board.sonar_read(trigPin1)
         ultra_sonic_distance_input.append(data[0])
@@ -86,18 +86,21 @@ def input_sub_system(type):
             rawReading = board.analog_read(thermistorA)
             voltage = rawReading[0]
         time_read = rawReading[1]
-        R2 = circuitR1 * ((supplyVoltage/voltage)-1)
-        logR2 = math.log(R2)
-        tempK = (1.0 / (steinHartA + steinHartB*logR2 + steinHartC*(logR2**3)))
-        tempC = tempK - 273.15 + tempCalibration
-        temperature_readings.append(tempC)
-        temp_time_readings.append(time_read)
+        if voltage != 0:
+            R2 = circuitR1 * ((supplyVoltage/voltage)-1)
+            logR2 = math.log(R2)
+            tempK = (1.0 / (steinHartA + steinHartB*logR2 + steinHartC*(logR2**3)))
+            tempC = tempK - 273.15 + tempCalibration
+            temperature_readings.append(tempC)
+            temp_time_readings.append(time_read)
+        else:
+            tempC = 15
         return tempC
 
     elif type == 4:
 
         board.set_pin_mode_sonar(trigPin2, echoPin2, timeout=200000)
-        time.sleep(0.5)
+        time.sleep(0.25)
 
         data = board.sonar_read(trigPin2)
         heightReturned = data[0]

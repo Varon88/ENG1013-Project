@@ -9,6 +9,7 @@ import time as time
 import InputSubSystem as inputSub
 import OutputSubSystem as output
 import ServicesSubSystem as service
+import Display as disp
 import matplotlib.pyplot as plt
 
 # light_sequence() parameters; 1 - start from start stage 1 and go on until stage 3; 4 - start from start stage 4 to stage 6
@@ -81,7 +82,8 @@ def control_sub_system(mode):
 
                     else:
                         print("Insufficient data to generate graphs.")
-                        service.display("Err")
+                        disp.display("Errorz",2)
+                        disp.turn_off_display()
 
                 elif selection == 3:
                     if len(inputSub.temperature_readings) != 0:
@@ -100,7 +102,8 @@ def control_sub_system(mode):
 
                     else:
                         print("Insufficient data to generate graphs.")
-                        service.display("Err")
+                        disp.display("Errorz",2)
+                        disp.turn_off_display()
 
                 elif selection == 2:
                     if len(inputSub.ultra_sonic_distance_input) >= round(20 / service.pollingFrequency):
@@ -123,9 +126,18 @@ def control_sub_system(mode):
                         plt.pause(0.001)
                     else:
                         print("Insufficient data to generate graphs.")
-                        service.display("Err")
+                        disp.display("Errorz",2)
+                        disp.turn_off_display()
+
 
                 elif selection == 4:
+                    temperatureData = inputSub.temperature_readings
+                    latestTemperature = temperatureData[-1]
+                    # latestDayNightData =
+
+                    #Todo: implement the functionality needed here when the day night circuit is built
+
+                elif selection == 5:
                     break
         
         except KeyboardInterrupt:
@@ -157,6 +169,7 @@ def light_sequence(startStage):
                 print(f"Time after which sensors are polled after the start of stage 1 : {round(get_current_time() - stageOneStartTime,1)}\n")
             if (round(get_current_time() - stageOneStartTime)) % 2 == 0:
                 print_nearest_distance()
+                is_vehicle_standstill()
             timeDiffrerence = get_current_time() - initialTime
             timeDiffrerence = check_conditions(1, timeDiffrerence, 2)
 
@@ -342,6 +355,18 @@ def print_nearest_distance():
         print(f"A vehicle that recently passed exceeded the height limit and was of height {round(latestHeight,2)}")
 
 
+def is_vehicle_standstill():
+
+    """
+        Function prints to the console if there is a vehicle at standstill for more than 3 seconds
+        Parameters : None
+    """
+    distances = inputSub.ultra_sonic_distance_input
+    if len(distances) >= 3:
+        if distances[-1] == distances[-2] == distances[-3]:
+            print("A vehicle is at standstill in this stage")
+
+
 
 
 def total_number_presses():
@@ -350,13 +375,13 @@ def total_number_presses():
     """
     global buttonInput
 
-    print(f"Number of button presses : {buttonInput.count(0)}")
+    print(f"Number of button presses : {buttonInput.count(1)}")
 
 
 def generate_average_rate_of_change(distance,time,mode = 1):
     velocityList = []
     for i in range(len(time)):
-        velocityList.append(distance(i)/time(i))
+        velocityList.append(distance[i]/time[i])
 
     if mode == 1:
         averageVelocity = sum(velocityList)/len(velocityList)
@@ -382,7 +407,8 @@ def data_observation_mode_menu():
     print("       1 : Distance against Time for the last 20 seconds of the polling loop")
     print("       2 : Velocity against Time for the last 20 seconds of the polling loop")
     print("       3 : Temperature against time throughout the whole run")
-    print("       4 : Exit data observation mode")
+    print("       4 : Current road condition viewer")
+    print("       5 : Exit data observation mode")
     print()
     print("================================================================================")
     print("================================================================================")

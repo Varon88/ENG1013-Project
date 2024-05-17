@@ -10,11 +10,12 @@ import math
 
 # Pins
 trigPin1 = 5
-echoPin1 = 3
+echoPin1 = 6
 trigPin2 = 10
 echoPin2 = 11
-button = 4
+buttonA = 2
 thermistorA = 0
+ldrA = 1
 
 # Necessary Constants
 steinHartA = service.steinHartA
@@ -23,6 +24,7 @@ steinHartC = service.steinHartC
 circuitR1 = service.circuitR1
 supplyVoltage = service.supplyVoltage
 ultraSonic2Height = service.ultraSonic2Height
+tempCalibration = 9.8
 
 board = service.board
 
@@ -33,6 +35,7 @@ push_button_input = []
 temperature_readings = []
 temp_time_readings = []
 ultra_sonic_height = []
+push_button_voltage_input = []
 
 def input_sub_system(type):
 
@@ -42,22 +45,26 @@ def input_sub_system(type):
     """
     global ultra_sonic_distance_input
     global ultra_sonic_time_input
+    global push_button_voltage_input
     global push_button_input
     global temperature_readings
     global temp_time_readings
     global board
+
     
     if type == 1: # Button Presses
 
-        #TODO: Covert this into a analog input
-        board.set_pin_mode_digital_input(button)
-        time.sleep(0.025)
+        board.set_pin_mode_analog_input(buttonA)
+        measurement = board.analog_read(buttonA)
+        voltage = measurement[0]
+        push_button_voltage_input.append(voltage)
+        if voltage <= 20:
+            push_button_input.append(1)
+            return 1
+        else:
+            push_button_input.append(0)
+            return 0
 
-        buttonData = board.digital_read(button)
-        buttonPress = buttonData[0]
-        push_button_input.append(buttonData)
-        return buttonPress
-    
     elif type == 2: # UltraSonic main
 
         board.set_pin_mode_sonar(trigPin1, echoPin1, timeout=200000)
@@ -82,7 +89,7 @@ def input_sub_system(type):
         R2 = circuitR1 * ((supplyVoltage/voltage)-1)
         logR2 = math.log(R2)
         tempK = (1.0 / (steinHartA + steinHartB*logR2 + steinHartC*(logR2**3)))
-        tempC = tempK - 273.15
+        tempC = tempK - 273.15 + tempCalibration
         temperature_readings.append(tempC)
         temp_time_readings.append(time_read)
         return tempC
@@ -97,6 +104,29 @@ def input_sub_system(type):
         actualHeight = ultraSonic2Height - heightReturned
         ultra_sonic_height.append(actualHeight)
         return actualHeight
+
+    elif type == 5:
+
+        board.set_pin_mode_analog_input(ldrA)
+        condition = None
+        firstIter = True
+        while True:
+            time.sleep(0.25)
+            measurement = board.analog_read(ldrA)
+            voltageMeasure = measurement[0]
+
+            if firstIter == True:
+                firstIter = False
+            else:
+                if voltageMeasure >= 300:
+                    condition = "Night"
+                else:
+                    condition = "Day"
+
+            return condition
+
+
+
 
 
 

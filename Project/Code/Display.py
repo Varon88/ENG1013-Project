@@ -25,10 +25,16 @@ lookupDictionary = {
     "G": "01101111",
     "U": "00111110",
 
-    "g": " ",
+    "g": "01111011",
     "o": "00011101",
     "r": "00000101",
-    "t": "00001111"
+    "t": "00001111",
+    "y": "00111011",
+    "n": "00010101",
+    "h": "00010111",
+    "i": "00010000",
+
+    "=": "00001001"
 }
 
 select_segment1 = {
@@ -63,33 +69,44 @@ def display(string,mode,displayNumber = 1):
     starter = True
     displayList = initialize_display_list(string)
 
-
+    innerDisplayTime = 0.90
     if mode == 1:
         displayTime = 2
     elif mode == 2:
         displayTime = 8
+    elif mode == 3:
+        displayTime = 2
 
-    while currentTime - startTime <= displayTime:
 
-        if starter == True:
-            starter = False
-        else:
-            if displayNumber == 1:
-                displayList = roll_display_list(displayList)
+    if mode != 3:
+        while currentTime - startTime <= displayTime:
 
-        chosen_elements = currently_displayed_elements(string, displayList)
+            if starter == True:
+                starter = False
+            else:
+                if displayNumber == 1:
+                    displayList = roll_display_list(displayList)
 
-        innerStart = time.time()
-        innerCurrent = time.time()
-        while innerCurrent - innerStart <= 0.90:
-            for i in range(len(chosen_elements)):
-                bits = get_bits_to_be_written(chosen_elements[i], (i + 1), displayNumber)
-                reset_shift_register()
-                write_to_shift(bits)
+            chosen_elements = currently_displayed_elements(string, displayList)
 
+            innerStart = time.time()
             innerCurrent = time.time()
+            while innerCurrent - innerStart <= innerDisplayTime:
+                for i in range(len(chosen_elements)):
+                    bits = get_bits_to_be_written(chosen_elements[i], (i + 1), displayNumber)
+                    reset_shift_register()
+                    write_to_shift(bits)
 
-        currentTime = time.time()
+                innerCurrent = time.time()
+
+            currentTime = time.time()
+    else:
+        chosen_elements = currently_displayed_elements(string, displayList)
+        for i in range(len(chosen_elements)):
+            bits = get_bits_to_be_written(chosen_elements[i], (i + 1), displayNumber)
+            reset_shift_register()
+            write_to_shift(bits)
+        reset_shift_register()
 
 
 def initialize_display_list(displayedCharacters):

@@ -19,6 +19,11 @@ buttonInput = []
 temps = []
 heights = []
 
+board = service.board
+led_pin = 12
+buzzer_pin = 13
+
+
 def control_sub_system(mode):
 
     """
@@ -30,6 +35,7 @@ def control_sub_system(mode):
 
     if mode == 1:
         try:
+            initialize_buzzer_led_pins()
             while True:
 
                 pollingLoopStartTime = time.time()
@@ -78,7 +84,8 @@ def control_sub_system(mode):
                         plt.savefig("/Users/varonrasiah/Documents/Moansh/ENG1013-Project/Project/plots/disp_plot.png")
                         plt.pause(0.001)
 
-                        generate_average_rate_of_change(distancesLast20Seconds, timeLast20Seconds)
+                        if timeLast20Seconds[0] != 0:
+                            generate_average_rate_of_change(distancesLast20Seconds, timeLast20Seconds)
 
                     else:
                         print("Insufficient data to generate graphs.")
@@ -133,9 +140,25 @@ def control_sub_system(mode):
                 elif selection == 4:
                     temperatureData = inputSub.temperature_readings
                     latestTemperature = temperatureData[-1]
-                    # latestDayNightData =
+                    latestDayNightData = inputSub.input_sub_system(5)
 
-                    #Todo: implement the functionality needed here when the day night circuit is built
+                    tempStr = "Tz" + str(round(latestTemperature, 2))
+
+                    # latestDayNightData = "Night" #// test data
+                    # tempStr = "t=15z"
+
+                    if latestDayNightData == "Day":
+                        dayNightStr = "DAyz"
+                    elif latestDayNightData == "Night":
+                        dayNightStr = "nightz"
+
+                    print("Temperature displayed on seven segment")
+                    disp.display(tempStr,2)
+
+                    print("Current day cycle displayed on seven segment")
+                    disp.display(dayNightStr,2)
+
+
 
                 elif selection == 5:
                     break
@@ -160,6 +183,7 @@ def light_sequence(startStage):
         stageOneStartTime = get_current_time()
         
         print(f"Traffic light stage = {startStage}")
+        disp.display("5tg=1z", 1)
         initialTime = get_current_time()
         timeDiffrerence = 0 
         while timeDiffrerence <= 30.0:
@@ -172,8 +196,11 @@ def light_sequence(startStage):
                 is_vehicle_standstill()
             timeDiffrerence = get_current_time() - initialTime
             timeDiffrerence = check_conditions(1, timeDiffrerence, 2)
+            if len(heights) != 0:
+                last_vehicle_height()
 
         print(f"Traffic light stage = {startStage+1}")
+        disp.display("5tg=2z", 1)
         initialTime2 = get_current_time()
         timeDifference2 = 0 
         while timeDifference2 <= 3:
@@ -183,11 +210,14 @@ def light_sequence(startStage):
                 print(f"Time after which sensors are polled after the start of stage 1 : {round(get_current_time() - stageOneStartTime,1)}\n")
             if (round(get_current_time() - stageOneStartTime)) % 2 == 0:
                 print_nearest_distance()
+                is_vehicle_standstill()
             timeDifference2 = get_current_time() - initialTime2
-
+            if len(heights) != 0:
+                last_vehicle_height()
         
         total_number_presses()
         print(f"Traffic light stage = {startStage+2}")
+        disp.display("5tg=3z", 1)
         initialTime3 = get_current_time()
         timeDifference3 = 0 
         while timeDifference3 <= 3:
@@ -197,53 +227,69 @@ def light_sequence(startStage):
                 print(f"Time after which sensors are polled after the start of stage 1 : {round(get_current_time() - stageOneStartTime,1)}\n")
             if (round(get_current_time() - stageOneStartTime))% 2 == 0:
                 print_nearest_distance()
+                is_vehicle_standstill()
             timeDifference3 = get_current_time() - initialTime3
+            if len(heights) != 0:
+                last_vehicle_height()
 
     elif startStage == 4:
 
         stageFourStartTime = get_current_time()
 
         print(f"Traffic light stage = {startStage}")
+        disp.display("5tg=4z", 1)
         initialTime = get_current_time()
         timeDiffrerence = 0 
         while timeDiffrerence <= 30.0:
             output.output_sub_system(startStage)
             if (round(get_current_time() - stageFourStartTime))% service.pollingFrequency == 0:
                 poll_Sensors()
-                print(f"Time after which sensors are polled after the start of stage 3 : {round(get_current_time() - stageFourStartTime,1)}\n")
+                print(f"Time after which sensors are polled after the start of stage 4 : {round(get_current_time() - stageFourStartTime,1)}\n")
             if (round(get_current_time() - stageFourStartTime))% 2 == 0:
                 print_nearest_distance()
+                is_vehicle_standstill()
             timeDiffrerence = get_current_time() - initialTime
+            if len(heights) != 0:
+                last_vehicle_height()
 
         print(f"Traffic light stage = {startStage+1}")
+        disp.display("5tg=5z", 1)
         initialTime2 = get_current_time()
         timeDifference2 = 0 
         while timeDifference2 <= 3:
             output.output_sub_system(startStage+1)
             if (round(get_current_time() - stageFourStartTime))% service.pollingFrequency == 0:
                 poll_Sensors()
-                print(f"Time after which sensors are polled after the start of stage 3 : {round(get_current_time() - stageFourStartTime,1)}\n")
+                print(f"Time after which sensors are polled after the start of stage 4 : {round(get_current_time() - stageFourStartTime,1)}\n")
             if (round(get_current_time() - stageFourStartTime))% 2 == 0:
                 print_nearest_distance()
+                is_vehicle_standstill()
             timeDifference2 = get_current_time() - initialTime2
+            if len(heights) != 0:
+                last_vehicle_height()
 
         print(f"Traffic light stage = {startStage+2}")
+        disp.display("5tg=6z", 1)
         initialTime3 = get_current_time()
         timeDifference3 = 0 
         while timeDifference3 <= 3:
             output.output_sub_system(startStage+2)
             if (round(get_current_time() - stageFourStartTime))% service.pollingFrequency == 0:
                 poll_Sensors()
-                print(f"Time after which sensors are polled after the start of stage 1 : {round(get_current_time() - stageFourStartTime,1)}\n")
+                print(f"Time after which sensors are polled after the start of stage 4 : {round(get_current_time() - stageFourStartTime,1)}\n")
             if (round(get_current_time() - stageFourStartTime))% 2 == 0:
                 print_nearest_distance()
+                is_vehicle_standstill()
             timeDifference3 = get_current_time() - initialTime3
+            if len(heights) != 0:
+                last_vehicle_height()
 
     elif startStage == 0:
 
         stageZeroStartTime = get_current_time()
 
         print(f"Traffic light stage = {startStage+1}")
+        disp.display("5tg=1z", 1)
         initialTime = get_current_time()
         timeDiffrerence = 0 
         while timeDiffrerence <= 30.0:
@@ -253,9 +299,13 @@ def light_sequence(startStage):
                 print(f"Time after which sensors are polled after the start of stage 1 : {round(get_current_time() - stageZeroStartTime,1)}\n")
             if (round(get_current_time() - stageZeroStartTime))% 2 == 0:
                 print_nearest_distance()
+                is_vehicle_standstill()
             timeDiffrerence = get_current_time() - initialTime
+            if len(heights) != 0:
+                last_vehicle_height()
 
         print(f"Traffic light stage = {startStage+2}")
+        disp.display("5tg=1z", 1)
         initialTime2 = get_current_time()
         timeDifference2 = 0 
         while timeDifference2 <= 3:
@@ -265,9 +315,13 @@ def light_sequence(startStage):
                 print(f"Time after which sensors are polled after the start of stage 1 : {round(get_current_time() - stageZeroStartTime,1)}\n")
             if (round(get_current_time() - stageZeroStartTime))% 2 == 0:
                 print_nearest_distance()
+                is_vehicle_standstill()
             timeDifference2 = get_current_time() - initialTime2
+            if len(heights) != 0:
+                last_vehicle_height()
 
         print(f"Traffic light stage = {startStage+3}")
+        disp.display("5tg=1z", 1)
         initialTime3 = get_current_time()
         timeDifference3 = 0 
         while timeDifference3 <= 3:
@@ -277,7 +331,10 @@ def light_sequence(startStage):
                 print(f"Time after which sensors are polled after the start of stage 1 : {round(get_current_time() - stageZeroStartTime,1)}\n")
             if (round(get_current_time() - stageZeroStartTime))% 2 == 0:
                 print_nearest_distance()
+                is_vehicle_standstill()
             timeDifference3 = get_current_time() - initialTime3
+            if len(heights) != 0:
+                last_vehicle_height()
 
 
 
@@ -344,7 +401,7 @@ def print_nearest_distance():
         Function prints to the console the distance to the nearest vehicle on demand
         Parameters : None
     """
-    global sensorInput
+    global sensorInput, heights
 
     minDistance = sensorInput[-1]
 
@@ -355,16 +412,46 @@ def print_nearest_distance():
         print(f"A vehicle that recently passed exceeded the height limit and was of height {round(latestHeight,2)}")
 
 
+def last_vehicle_height():
+
+    """
+        Function returns the height of the last vehicle passed
+        Parameters : None
+    """
+    global heights
+
+    latestHeight = heights[-1]
+    if latestHeight > 0:
+        latestHeight = str(latestHeight)
+        length = len(latestHeight)
+        if length == 1:
+            latestHeight = latestHeight + "zzz"
+        elif length == 2:
+            latestHeight = latestHeight + "zz"
+        elif length == 3:
+            latestHeight = latestHeight + "z"
+
+        disp.display(latestHeight,3,2)
+
+
+
 def is_vehicle_standstill():
 
     """
         Function prints to the console if there is a vehicle at standstill for more than 3 seconds
         Parameters : None
     """
+    global board,led_pin,buzzer_pin
+
     distances = inputSub.ultra_sonic_distance_input
     if len(distances) >= 3:
         if distances[-1] == distances[-2] == distances[-3]:
             print("A vehicle is at standstill in this stage")
+            board.digital_pin_write(led_pin, 1)
+            board.digital_pin_write(buzzer_pin, 1)
+            time.sleep(0.25)
+            board.digital_pin_write(led_pin, 0)
+            board.digital_pin_write(buzzer_pin, 0)
 
 
 
@@ -421,6 +508,15 @@ def format_times(time):
         formattedTime.append(timeDiff)
 
     return formattedTime
+
+
+def initialize_buzzer_led_pins():
+
+    global board, led_pin, buzzer_pin
+
+    board.set_pin_mode_digital_output(led_pin)
+    board.set_pin_mode_digital_output(buzzer_pin)
+
 
 
 

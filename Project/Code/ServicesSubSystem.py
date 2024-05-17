@@ -81,7 +81,21 @@ def servies_sub_system():
                             break
                         except ValueError:
                             print("please enter a set of digits and not letters or any other symbols")
-                    disp.display((str(userEnteredPasscode)+"z"), 2)
+
+                    userEnteredPassocdeString = str(userEnteredPasscode)
+
+                    if len(userEnteredPassocdeString) == 1:
+                        userEnteredPassocdeString = userEnteredPassocdeString + "zzz"
+                    elif len(userEnteredPassocdeString) == 2:
+                        userEnteredPassocdeString = userEnteredPassocdeString + "zz"
+                    elif len(userEnteredPassocdeString) == 3:
+                        userEnteredPassocdeString = userEnteredPassocdeString + "z"
+
+                    if len(str(userEnteredPasscode)) >= 4:
+                        disp.display((str(userEnteredPassocdeString)+"z"), 2)
+                    else:
+                        disp.display((str(userEnteredPassocdeString)), 2)
+
                     passwordTries += 1
                     pinCondition = authenticate(userEnteredPasscode)
                     timeoutCondition = check_timeout(startTime)
@@ -472,6 +486,9 @@ def servies_sub_system():
             except KeyboardInterrupt:
                print("\n Exited maintenance and adjustment mode.")
         elif mode == 4:
+            print("Turning off display")
+            disp.turn_off_display()
+            print("saving system variables")
             system_variable_persistence()
             print("Shutting down-board")
             board.shutdown()
@@ -576,7 +593,7 @@ def print_system_variable_edit_menu():
 
 
 def system_lockout():
-    lockoutTime = 20
+    lockoutTime = 120
     startTime = time.time()
     timeDifference = 0
     print(f"System has been locked out for {lockoutTime} seconds, system will reset to regular functionality after this time.")

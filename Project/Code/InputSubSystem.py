@@ -24,7 +24,7 @@ steinHartC = service.steinHartC
 circuitR1 = service.circuitR1
 supplyVoltage = service.supplyVoltage
 ultraSonic2Height = service.ultraSonic2Height
-tempCalibration = 9.8
+tempCalibration = 10.4
 
 board = service.board
 
